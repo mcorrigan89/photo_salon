@@ -3,6 +3,7 @@ import { dbSymbol, di } from "@/lib/di.ts";
 import { base, authenticatedRoute, authorizedRoute } from "./base.ts";
 import { userController } from "@/controllers/user-controller.ts";
 import { memberController } from "@/controllers/member-controller.ts";
+import { salonTemplateController } from "@/controllers/salon-template-controller.ts";
 
 const healthy = base.healthy.handler(async () => {
   const db = di.get<Database>(dbSymbol);
@@ -34,6 +35,50 @@ const removeMember = authorizedRoute.member.remove.handler(async ({ input, conte
   return memberController.removeMember(context, context.domain, input.memberId);
 });
 
+const listTemplates = authorizedRoute.salonTemplate.list.handler(async ({ context }) => {
+  return salonTemplateController.listTemplates(context, context.domain);
+});
+
+const getTemplate = authorizedRoute.salonTemplate.get.handler(async ({ input, context }) => {
+  return salonTemplateController.getTemplate(context, context.domain, input.templateId);
+});
+
+const createTemplate = authorizedRoute.salonTemplate.create.handler(async ({ input, context }) => {
+  return salonTemplateController.createTemplate(context, context.domain, input);
+});
+
+const updateTemplate = authorizedRoute.salonTemplate.update.handler(async ({ input, context }) => {
+  return salonTemplateController.updateTemplate(context, context.domain, input);
+});
+
+const deleteTemplate = authorizedRoute.salonTemplate.delete.handler(async ({ input, context }) => {
+  return salonTemplateController.deleteTemplate(context, context.domain, input.templateId);
+});
+
+const addCriterion = authorizedRoute.salonTemplate.addCriterion.handler(async ({ input, context }) => {
+  return salonTemplateController.addCriterion(context, context.domain, input);
+});
+
+const updateCriterion = authorizedRoute.salonTemplate.updateCriterion.handler(async ({ input, context }) => {
+  return salonTemplateController.updateCriterion(context, context.domain, input);
+});
+
+const removeCriterion = authorizedRoute.salonTemplate.removeCriterion.handler(async ({ input, context }) => {
+  return salonTemplateController.removeCriterion(context, context.domain, input.criterionId);
+});
+
+const addSlot = authorizedRoute.salonTemplate.addSlot.handler(async ({ input, context }) => {
+  return salonTemplateController.addSlot(context, context.domain, input);
+});
+
+const updateSlot = authorizedRoute.salonTemplate.updateSlot.handler(async ({ input, context }) => {
+  return salonTemplateController.updateSlot(context, context.domain, input);
+});
+
+const removeSlot = authorizedRoute.salonTemplate.removeSlot.handler(async ({ input, context }) => {
+  return salonTemplateController.removeSlot(context, context.domain, input.slotId);
+});
+
 export const routerImplementation = base.router({
   healthy,
   currentUser: {
@@ -44,5 +89,18 @@ export const routerImplementation = base.router({
     add: addMember,
     update: updateMember,
     remove: removeMember,
+  },
+  salonTemplate: {
+    list: listTemplates,
+    get: getTemplate,
+    create: createTemplate,
+    update: updateTemplate,
+    delete: deleteTemplate,
+    addCriterion,
+    updateCriterion,
+    removeCriterion,
+    addSlot,
+    updateSlot,
+    removeSlot,
   },
 });

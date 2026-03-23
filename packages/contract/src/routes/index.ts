@@ -11,6 +11,19 @@ import {
   updateMemberRoute,
   removeMemberRoute,
 } from "./member-routes.ts";
+import {
+  listTemplatesRoute,
+  getTemplateRoute,
+  createTemplateRoute,
+  updateTemplateRoute,
+  deleteTemplateRoute,
+  addCriterionRoute,
+  updateCriterionRoute,
+  removeCriterionRoute,
+  addSlotRoute,
+  updateSlotRoute,
+  removeSlotRoute,
+} from "./salon-template-routes.ts";
 
 const healthy = oc.output(z.string());
 
@@ -24,6 +37,19 @@ export const contract = {
     add: addMemberRoute,
     update: updateMemberRoute,
     remove: removeMemberRoute,
+  },
+  salonTemplate: {
+    list: listTemplatesRoute,
+    get: getTemplateRoute,
+    create: createTemplateRoute,
+    update: updateTemplateRoute,
+    delete: deleteTemplateRoute,
+    addCriterion: addCriterionRoute,
+    updateCriterion: updateCriterionRoute,
+    removeCriterion: removeCriterionRoute,
+    addSlot: addSlotRoute,
+    updateSlot: updateSlotRoute,
+    removeSlot: removeSlotRoute,
   },
 };
 

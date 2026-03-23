@@ -14,6 +14,8 @@ import { Route as DashboardRouteRouteImport } from "./routes/dashboard/route";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as DashboardIndexRouteImport } from "./routes/dashboard/index";
 import { Route as DashboardMembersRouteImport } from "./routes/dashboard/members";
+import { Route as DashboardTemplatesIndexRouteImport } from "./routes/dashboard/templates/index";
+import { Route as DashboardTemplatesTemplateIdRouteImport } from "./routes/dashboard/templates/$templateId";
 import { Route as AuthCallbackRouteImport } from "./routes/auth/callback";
 
 const LoginRoute = LoginRouteImport.update({
@@ -41,6 +43,16 @@ const DashboardMembersRoute = DashboardMembersRouteImport.update({
   path: "/members",
   getParentRoute: () => DashboardRouteRoute,
 } as any);
+const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
+  id: "/templates/",
+  path: "/templates/",
+  getParentRoute: () => DashboardRouteRoute,
+} as any);
+const DashboardTemplatesTemplateIdRoute = DashboardTemplatesTemplateIdRouteImport.update({
+  id: "/templates/$templateId",
+  path: "/templates/$templateId",
+  getParentRoute: () => DashboardRouteRoute,
+} as any);
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: "/auth/callback",
   path: "/auth/callback",
@@ -54,6 +66,8 @@ export interface FileRoutesByFullPath {
   "/auth/callback": typeof AuthCallbackRoute;
   "/dashboard/": typeof DashboardIndexRoute;
   "/dashboard/members": typeof DashboardMembersRoute;
+  "/dashboard/templates/": typeof DashboardTemplatesIndexRoute;
+  "/dashboard/templates/$templateId": typeof DashboardTemplatesTemplateIdRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
@@ -61,6 +75,8 @@ export interface FileRoutesByTo {
   "/auth/callback": typeof AuthCallbackRoute;
   "/dashboard": typeof DashboardIndexRoute;
   "/dashboard/members": typeof DashboardMembersRoute;
+  "/dashboard/templates": typeof DashboardTemplatesIndexRoute;
+  "/dashboard/templates/$templateId": typeof DashboardTemplatesTemplateIdRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -69,6 +85,9 @@ export interface FileRoutesById {
   "/login": typeof LoginRoute;
   "/auth/callback": typeof AuthCallbackRoute;
   "/dashboard/": typeof DashboardIndexRoute;
+  "/dashboard/members": typeof DashboardMembersRoute;
+  "/dashboard/templates/": typeof DashboardTemplatesIndexRoute;
+  "/dashboard/templates/$templateId": typeof DashboardTemplatesTemplateIdRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -78,9 +97,18 @@ export interface FileRouteTypes {
     | "/login"
     | "/auth/callback"
     | "/dashboard/"
-    | "/dashboard/members";
+    | "/dashboard/members"
+    | "/dashboard/templates/"
+    | "/dashboard/templates/$templateId";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/login" | "/auth/callback" | "/dashboard" | "/dashboard/members";
+  to:
+    | "/"
+    | "/login"
+    | "/auth/callback"
+    | "/dashboard"
+    | "/dashboard/members"
+    | "/dashboard/templates"
+    | "/dashboard/templates/$templateId";
   id:
     | "__root__"
     | "/"
@@ -88,7 +116,9 @@ export interface FileRouteTypes {
     | "/login"
     | "/auth/callback"
     | "/dashboard/"
-    | "/dashboard/members";
+    | "/dashboard/members"
+    | "/dashboard/templates/"
+    | "/dashboard/templates/$templateId";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -135,6 +165,20 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DashboardMembersRouteImport;
       parentRoute: typeof DashboardRouteRoute;
     };
+    "/dashboard/templates/": {
+      id: "/dashboard/templates/";
+      path: "/templates/";
+      fullPath: "/dashboard/templates/";
+      preLoaderRoute: typeof DashboardTemplatesIndexRouteImport;
+      parentRoute: typeof DashboardRouteRoute;
+    };
+    "/dashboard/templates/$templateId": {
+      id: "/dashboard/templates/$templateId";
+      path: "/templates/$templateId";
+      fullPath: "/dashboard/templates/$templateId";
+      preLoaderRoute: typeof DashboardTemplatesTemplateIdRouteImport;
+      parentRoute: typeof DashboardRouteRoute;
+    };
     "/auth/callback": {
       id: "/auth/callback";
       path: "/auth/callback";
@@ -148,11 +192,15 @@ declare module "@tanstack/react-router" {
 interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute;
   DashboardMembersRoute: typeof DashboardMembersRoute;
+  DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute;
+  DashboardTemplatesTemplateIdRoute: typeof DashboardTemplatesTemplateIdRoute;
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardMembersRoute: DashboardMembersRoute,
+  DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
+  DashboardTemplatesTemplateIdRoute: DashboardTemplatesTemplateIdRoute,
 };
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
