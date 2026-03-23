@@ -10,14 +10,14 @@
     "compile": "tsc --noEmit"
   },
   "dependencies": {
-    "@photo-salon/contract": "workspace:*",
-    "@photo-salon/env": "workspace:*",
-    "@photo-salon/ui": "workspace:*",
     "@base-ui/react": "1.2.0",
     "@orpc/client": "1.13.6",
     "@orpc/contract": "1.13.6",
     "@orpc/server": "1.13.6",
     "@orpc/tanstack-query": "1.13.6",
+    "@photo-salon/contract": "workspace:*",
+    "@photo-salon/env": "workspace:*",
+    "@photo-salon/ui": "workspace:*",
     "@tailwindcss/vite": "4.2.1",
     "@tanstack/nitro-v2-vite-plugin": "1.154.7",
     "@tanstack/react-form": "1.28.4",

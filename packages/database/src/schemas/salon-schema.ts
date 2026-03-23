@@ -15,15 +15,10 @@ import { member, organization, user } from "./auth-schema.ts";
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
-export const salonStatusEnum = pgEnum("salon_status", [
-  "draft",
-  "open",
-  "judging",
-  "complete",
-]);
+export const salonStatusEnum = pgEnum("salon_status", ["draft", "open", "judging", "complete"]);
 
 export const slideshowRevealModeEnum = pgEnum("slideshow_reveal_mode", [
-  "score_after",   // show image first, then reveal score on advance
+  "score_after", // show image first, then reveal score on advance
   "score_alongside", // show image and score at the same time
 ]);
 
@@ -79,7 +74,7 @@ export const templateScoringCriterion = pgTable(
     weight: decimal("weight", { precision: 4, scale: 2 }).default("1.00").notNull(),
     displayOrder: smallint("display_order").default(0).notNull(),
   },
-  (table) => [index("template_criterion_templateId_idx").on(table.templateId)]
+  (table) => [index("template_criterion_templateId_idx").on(table.templateId)],
 );
 
 /**
@@ -100,7 +95,7 @@ export const templateCategorySlot = pgTable(
     maxSubmissionsPerMember: smallint("max_submissions_per_member"),
     displayOrder: smallint("display_order").default(0).notNull(),
   },
-  (table) => [index("template_slot_templateId_idx").on(table.templateId)]
+  (table) => [index("template_slot_templateId_idx").on(table.templateId)],
 );
 
 // ─── Salon ────────────────────────────────────────────────────────────────────
@@ -150,7 +145,7 @@ export const salon = pgTable(
     index("salon_organizationId_idx").on(table.organizationId),
     index("salon_year_month_idx").on(table.year, table.month),
     index("salon_status_idx").on(table.status),
-  ]
+  ],
 );
 
 /**
@@ -172,7 +167,7 @@ export const salonScoringCriterion = pgTable(
     weight: decimal("weight", { precision: 4, scale: 2 }).notNull(),
     displayOrder: smallint("display_order").default(0).notNull(),
   },
-  (table) => [index("salon_criterion_salonId_idx").on(table.salonId)]
+  (table) => [index("salon_criterion_salonId_idx").on(table.salonId)],
 );
 
 /**
@@ -193,7 +188,7 @@ export const salonCategory = pgTable(
     maxSubmissionsPerMember: smallint("max_submissions_per_member"),
     displayOrder: smallint("display_order").default(0).notNull(),
   },
-  (table) => [index("salon_category_salonId_idx").on(table.salonId)]
+  (table) => [index("salon_category_salonId_idx").on(table.salonId)],
 );
 
 // ─── Submissions ──────────────────────────────────────────────────────────────
@@ -232,7 +227,7 @@ export const submission = pgTable(
   (table) => [
     index("submission_salonCategoryId_idx").on(table.salonCategoryId),
     index("submission_memberId_idx").on(table.memberId),
-  ]
+  ],
 );
 
 // ─── Scoring ──────────────────────────────────────────────────────────────────
@@ -269,7 +264,7 @@ export const score = pgTable(
   (table) => [
     index("score_submissionId_idx").on(table.submissionId),
     index("score_judgeId_idx").on(table.judgeId),
-  ]
+  ],
 );
 
 /**
@@ -290,9 +285,7 @@ export const scoreCriterionValue = pgTable(
       .references(() => salonScoringCriterion.id, { onDelete: "cascade" }),
     value: decimal("value", { precision: 5, scale: 2 }).notNull(),
   },
-  (table) => [
-    index("score_criterion_scoreId_idx").on(table.scoreId),
-  ]
+  (table) => [index("score_criterion_scoreId_idx").on(table.scoreId)],
 );
 
 // ─── Relations ────────────────────────────────────────────────────────────────
@@ -307,15 +300,12 @@ export const salonTemplateRelations = relations(salonTemplate, ({ one, many }) =
   salons: many(salon),
 }));
 
-export const templateScoringCriterionRelations = relations(
-  templateScoringCriterion,
-  ({ one }) => ({
-    template: one(salonTemplate, {
-      fields: [templateScoringCriterion.templateId],
-      references: [salonTemplate.id],
-    }),
-  })
-);
+export const templateScoringCriterionRelations = relations(templateScoringCriterion, ({ one }) => ({
+  template: one(salonTemplate, {
+    fields: [templateScoringCriterion.templateId],
+    references: [salonTemplate.id],
+  }),
+}));
 
 export const templateCategorySlotRelations = relations(templateCategorySlot, ({ one }) => ({
   template: one(salonTemplate, {

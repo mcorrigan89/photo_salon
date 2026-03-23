@@ -8,6 +8,6 @@ export class AppDomain {
   constructor(
     @inject(UserService) public userService: UserService,
     @inject(EmailService) public emailService: EmailService,
-    @inject(MemberService) public memberService: MemberService
+    @inject(MemberService) public memberService: MemberService,
   ) {}
 }

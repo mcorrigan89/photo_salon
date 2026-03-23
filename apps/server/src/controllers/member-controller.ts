@@ -36,7 +36,7 @@ export class MemberController {
   async addMember(
     ctx: UserContext,
     domain: AppDomain,
-    input: { name: string; email: string; memberNumber: string | null; role: string }
+    input: { name: string; email: string; memberNumber: string | null; role: string },
   ): Promise<MemberDto> {
     const orgId = requireActiveOrg(ctx);
     const entity = await domain.memberService.addMember(ctx, { ...input, organizationId: orgId });
@@ -46,7 +46,7 @@ export class MemberController {
   async updateMember(
     ctx: UserContext,
     domain: AppDomain,
-    input: { memberId: string; memberNumber?: string | null; role?: string }
+    input: { memberId: string; memberNumber?: string | null; role?: string },
   ): Promise<MemberDto> {
     const entity = await domain.memberService.updateMember(ctx, input);
     return toDto(entity);
@@ -55,7 +55,7 @@ export class MemberController {
   async removeMember(
     ctx: UserContext,
     domain: AppDomain,
-    memberId: string
+    memberId: string,
   ): Promise<{ success: boolean }> {
     await domain.memberService.removeMember(ctx, memberId);
     return { success: true };

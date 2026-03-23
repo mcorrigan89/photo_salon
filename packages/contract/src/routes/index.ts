@@ -1,4 +1,8 @@
-import { oc, type InferContractRouterInputs, type InferContractRouterOutputs } from "@orpc/contract";
+import {
+  oc,
+  type InferContractRouterInputs,
+  type InferContractRouterOutputs,
+} from "@orpc/contract";
 import { z } from "zod";
 import { currentUserRoute } from "./auth-routes.ts";
 import {

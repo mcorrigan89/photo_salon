@@ -16,7 +16,7 @@ export class MemberEntity {
       id: string;
       name: string;
       email: string;
-    }
+    },
   ) {}
 
   static fromModels(memberModel: MemberModel, userModel: UserModel): MemberEntity {
@@ -31,7 +31,7 @@ export class MemberEntity {
         id: userModel.id,
         name: userModel.name,
         email: userModel.email,
-      }
+      },
     );
   }
 }

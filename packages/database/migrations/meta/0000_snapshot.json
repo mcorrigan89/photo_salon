@@ -111,12 +111,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -220,12 +216,8 @@
           "name": "invitation_organization_id_organization_id_fk",
           "tableFrom": "invitation",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -233,12 +225,8 @@
           "name": "invitation_inviter_id_user_id_fk",
           "tableFrom": "invitation",
           "tableTo": "user",
-          "columnsFrom": [
-            "inviter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inviter_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -350,12 +338,8 @@
           "name": "member_organization_id_organization_id_fk",
           "tableFrom": "member",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -363,12 +347,8 @@
           "name": "member_user_id_user_id_fk",
           "tableFrom": "member",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -444,9 +424,7 @@
         "organization_slug_unique": {
           "name": "organization_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -542,12 +520,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -557,9 +531,7 @@
         "session_token_unique": {
           "name": "session_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -649,9 +621,7 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -887,12 +857,8 @@
           "name": "salon_organization_id_organization_id_fk",
           "tableFrom": "salon",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -900,12 +866,8 @@
           "name": "salon_template_id_salon_template_id_fk",
           "tableFrom": "salon",
           "tableTo": "salon_template",
-          "columnsFrom": [
-            "template_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["template_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -913,12 +875,8 @@
           "name": "salon_judge_id_user_id_fk",
           "tableFrom": "salon",
           "tableTo": "user",
-          "columnsFrom": [
-            "judge_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["judge_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -988,12 +946,8 @@
           "name": "salon_category_salon_id_salon_id_fk",
           "tableFrom": "salon_category",
           "tableTo": "salon",
-          "columnsFrom": [
-            "salon_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["salon_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1075,12 +1029,8 @@
           "name": "salon_scoring_criterion_salon_id_salon_id_fk",
           "tableFrom": "salon_scoring_criterion",
           "tableTo": "salon",
-          "columnsFrom": [
-            "salon_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["salon_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1150,12 +1100,8 @@
           "name": "salon_template_organization_id_organization_id_fk",
           "tableFrom": "salon_template",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1266,12 +1212,8 @@
           "name": "score_submission_id_submission_id_fk",
           "tableFrom": "score",
           "tableTo": "submission",
-          "columnsFrom": [
-            "submission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["submission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1279,12 +1221,8 @@
           "name": "score_judge_id_user_id_fk",
           "tableFrom": "score",
           "tableTo": "user",
-          "columnsFrom": [
-            "judge_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["judge_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1294,9 +1232,7 @@
         "score_submission_id_unique": {
           "name": "score_submission_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "submission_id"
-          ]
+          "columns": ["submission_id"]
         }
       },
       "policies": {},
@@ -1355,12 +1291,8 @@
           "name": "score_criterion_value_score_id_score_id_fk",
           "tableFrom": "score_criterion_value",
           "tableTo": "score",
-          "columnsFrom": [
-            "score_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["score_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1368,12 +1300,8 @@
           "name": "score_criterion_value_salon_scoring_criterion_id_salon_scoring_criterion_id_fk",
           "tableFrom": "score_criterion_value",
           "tableTo": "salon_scoring_criterion",
-          "columnsFrom": [
-            "salon_scoring_criterion_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["salon_scoring_criterion_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1510,12 +1438,8 @@
           "name": "submission_salon_category_id_salon_category_id_fk",
           "tableFrom": "submission",
           "tableTo": "salon_category",
-          "columnsFrom": [
-            "salon_category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["salon_category_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1523,12 +1447,8 @@
           "name": "submission_member_id_member_id_fk",
           "tableFrom": "submission",
           "tableTo": "member",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1598,12 +1518,8 @@
           "name": "template_category_slot_template_id_salon_template_id_fk",
           "tableFrom": "template_category_slot",
           "tableTo": "salon_template",
-          "columnsFrom": [
-            "template_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["template_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1688,12 +1604,8 @@
           "name": "template_scoring_criterion_template_id_salon_template_id_fk",
           "tableFrom": "template_scoring_criterion",
           "tableTo": "salon_template",
-          "columnsFrom": [
-            "template_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["template_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1709,29 +1621,17 @@
     "public.salon_status": {
       "name": "salon_status",
       "schema": "public",
-      "values": [
-        "draft",
-        "open",
-        "judging",
-        "complete"
-      ]
+      "values": ["draft", "open", "judging", "complete"]
     },
     "public.slideshow_reveal_mode": {
       "name": "slideshow_reveal_mode",
       "schema": "public",
-      "values": [
-        "score_after",
-        "score_alongside"
-      ]
+      "values": ["score_after", "score_alongside"]
     },
     "public.submission_status": {
       "name": "submission_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "accepted",
-        "withdrawn"
-      ]
+      "values": ["pending", "accepted", "withdrawn"]
     }
   },
   "schemas": {},

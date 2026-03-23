@@ -8,7 +8,7 @@ export class UserService {
   constructor(@inject(UserRepository) private repo: UserRepository) {}
 
   async currentUser(
-    ctx: UserContext
+    ctx: UserContext,
   ): Promise<{ userEntity: UserEntity | null; sessionEntity: UserContext["session"] | null }> {
     if (!ctx.currentUserId) {
       return { userEntity: null, sessionEntity: null };

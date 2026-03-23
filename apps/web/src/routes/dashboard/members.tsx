@@ -183,7 +183,9 @@ function EditMemberModal({ member, onClose }: { member: MemberDto; onClose: () =
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-900">
         <h2 className="mb-1 text-lg font-semibold">Edit Member</h2>
-        <p className="mb-4 text-sm text-zinc-500">{member.user.name} · {member.user.email}</p>
+        <p className="mb-4 text-sm text-zinc-500">
+          {member.user.name} · {member.user.email}
+        </p>
         <form
           onSubmit={(e) => {
             e.preventDefault();

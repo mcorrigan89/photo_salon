@@ -16,7 +16,7 @@ const server = serve(
   },
   () => {
     logger.info(`Server started on ${env.SERVER_URL}`);
-  }
+  },
 );
 
 process.on("SIGINT", () => {

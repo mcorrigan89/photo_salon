@@ -50,7 +50,11 @@ function LoginPage() {
           </p>
           <p className="text-sm text-muted-foreground mt-4">
             Didn&apos;t receive it?{" "}
-            <button type="button" onClick={() => setIsSubmitted(false)} className="text-primary hover:underline">
+            <button
+              type="button"
+              onClick={() => setIsSubmitted(false)}
+              className="text-primary hover:underline"
+            >
               Try again
             </button>
           </p>
@@ -74,7 +78,10 @@ function LoginPage() {
         )}
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          <label
+            htmlFor="email"
+            className="text-xs font-medium text-muted-foreground uppercase tracking-wide"
+          >
             Email
           </label>
           <input
@@ -109,9 +116,7 @@ function AuthPanel({ children }: { children: React.ReactNode }) {
         <div className="text-center mb-8">
           <span className="text-2xl font-bold">Photo Salon</span>
         </div>
-        <div className="rounded-2xl border border-border p-8">
-          {children}
-        </div>
+        <div className="rounded-2xl border border-border p-8">{children}</div>
       </div>
     </div>
   );

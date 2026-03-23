@@ -10,7 +10,7 @@ import { type MemberEntity } from "./member-entity.ts";
 export class MemberService {
   constructor(
     @inject(MemberRepository) private repo: MemberRepository,
-    @inject(EmailService) private email: EmailService
+    @inject(EmailService) private email: EmailService,
   ) {}
 
   async listMembers(ctx: UserContext, organizationId: string): Promise<MemberEntity[]> {
@@ -25,7 +25,7 @@ export class MemberService {
       memberNumber: string | null;
       role: string;
       organizationId: string;
-    }
+    },
   ): Promise<MemberEntity> {
     // Find or create the user
     let userRow = await this.repo.findUserByEmail(ctx, params.email);
@@ -64,7 +64,7 @@ export class MemberService {
       memberId: string;
       memberNumber?: string | null;
       role?: string;
-    }
+    },
   ): Promise<MemberEntity> {
     const existing = await this.repo.findById(ctx, params.memberId);
     if (!existing) {

@@ -10,7 +10,7 @@ export class UserEntity {
     public readonly email: string,
     public readonly emailVerified: boolean,
     public readonly role: string | null,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
   ) {}
 
   get initials(): string {
@@ -29,7 +29,7 @@ export class UserEntity {
       model.email,
       model.emailVerified,
       model.role ?? null,
-      model.createdAt
+      model.createdAt,
     );
   }
 }
