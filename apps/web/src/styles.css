@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@import "@photo-salon/ui/styles.css";
+
+@source "../node_modules/@photo-salon/ui/src/components/";

@@ -1,0 +1,31 @@
+{
+  "name": "@photo-salon/database",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schemas/index.ts"
+  },
+  "scripts": {
+    "db:generate": "dotenv -e ../../.env -- drizzle-kit generate",
+    "db:migrate": "dotenv -e ../../.env -- drizzle-kit migrate",
+    "migrate": "dotenv -e ../../.env -- tsx migrate.ts",
+    "reset": "dotenv -e ../../.env -- tsx reset.ts",
+    "seed": "dotenv -e ../../.env -- tsx seed.ts",
+    "compile": "tsc --noEmit",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.1",
+    "pg": "8.20.0"
+  },
+  "devDependencies": {
+    "@photo-salon/env": "workspace:*",
+    "@types/node": "25.3.5",
+    "@types/pg": "8.18.0",
+    "dotenv-cli": "11.0.0",
+    "drizzle-kit": "0.31.9",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
+  }
+}

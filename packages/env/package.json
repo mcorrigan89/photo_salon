@@ -1,0 +1,21 @@
+{
+  "name": "@photo-salon/env",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./server": "./src/server.ts",
+    "./client": "./src/client.ts",
+    "./shared": "./src/shared.ts"
+  },
+  "scripts": {
+    "compile": "tsc --noEmit",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "25.3.5",
+    "typescript": "5.9.3"
+  }
+}
