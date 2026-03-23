@@ -1,8 +1,8 @@
-import { type member, type user } from "@photo-salon/database/schema";
+import { type member } from "@photo-salon/database/schema";
 import { type InferSelectModel } from "drizzle-orm";
+import { type UserEntity } from "@/domain/users/user-entity.ts";
 
 type MemberModel = InferSelectModel<typeof member>;
-type UserModel = InferSelectModel<typeof user>;
 
 export class MemberEntity {
   private constructor(
@@ -19,7 +19,25 @@ export class MemberEntity {
     },
   ) {}
 
-  static fromModels(memberModel: MemberModel, userModel: UserModel): MemberEntity {
+  static create(params: {
+    userId: string;
+    organizationId: string;
+    memberNumber: string | null;
+    role: string;
+    user: { id: string; name: string; email: string };
+  }): MemberEntity {
+    return new MemberEntity(
+      crypto.randomUUID(),
+      params.userId,
+      params.organizationId,
+      params.memberNumber,
+      params.role,
+      new Date(),
+      params.user,
+    );
+  }
+
+  static fromModels(memberModel: MemberModel, userEntity: UserEntity): MemberEntity {
     return new MemberEntity(
       memberModel.id,
       memberModel.userId,
@@ -28,10 +46,22 @@ export class MemberEntity {
       memberModel.role,
       memberModel.createdAt,
       {
-        id: userModel.id,
-        name: userModel.name,
-        email: userModel.email,
+        id: userEntity.id,
+        name: userEntity.name,
+        email: userEntity.email,
       },
+    );
+  }
+
+  with(params: { memberNumber?: string | null; role?: string }): MemberEntity {
+    return new MemberEntity(
+      this.id,
+      this.userId,
+      this.organizationId,
+      params.memberNumber !== undefined ? params.memberNumber : this.memberNumber,
+      params.role ?? this.role,
+      this.createdAt,
+      this.user,
     );
   }
 }
