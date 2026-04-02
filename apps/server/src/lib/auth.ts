@@ -115,11 +115,11 @@ const auth = betterAuth({
       generateId: () => crypto.randomUUID(),
     },
     crossSubDomainCookies: {
-      enabled: true,
+      enabled: getSharedEnv().NODE_ENV === "production",
       domain: (() => {
         const host = new URL(getSharedEnv().SERVER_URL).hostname;
         const parts = host.split(".");
-        return parts.length > 1 ? `.${parts.slice(-2).join(".")}` : host;
+        return parts.length > 1 ? `.${parts.slice(-2).join(".")}` : undefined;
       })(),
     },
   },

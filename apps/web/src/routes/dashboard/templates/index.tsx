@@ -4,18 +4,19 @@ import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
+import { useOrganizationId } from "@/lib/use-org";
 
 export const Route = createFileRoute("/dashboard/templates/")({
   component: TemplatesPage,
 });
 
-function CreateTemplateModal({ onClose }: { onClose: () => void }) {
+function CreateTemplateModal({ organizationId, onClose }: { organizationId: string; onClose: () => void }) {
   const queryClient = useQueryClient();
 
   const create = useMutation({
     ...orpc.salonTemplate.create.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries(orpc.salonTemplate.list.queryOptions());
+      queryClient.invalidateQueries(orpc.salonTemplate.list.queryOptions({ input: { organizationId } }));
       toast.success("Template created.");
       onClose();
     },
@@ -25,7 +26,7 @@ function CreateTemplateModal({ onClose }: { onClose: () => void }) {
   const form = useForm({
     defaultValues: { name: "" },
     onSubmit: async ({ value }) => {
-      await create.mutateAsync({ name: value.name });
+      await create.mutateAsync({ organizationId, name: value.name });
     },
   });
 
@@ -70,14 +71,15 @@ function CreateTemplateModal({ onClose }: { onClose: () => void }) {
 }
 
 function TemplatesPage() {
-  const { data: templates } = useSuspenseQuery(orpc.salonTemplate.list.queryOptions());
+  const organizationId = useOrganizationId();
+  const { data: templates } = useSuspenseQuery(orpc.salonTemplate.list.queryOptions({ input: { organizationId } }));
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
 
   const deleteTemplate = useMutation({
     ...orpc.salonTemplate.delete.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries(orpc.salonTemplate.list.queryOptions());
+      queryClient.invalidateQueries(orpc.salonTemplate.list.queryOptions({ input: { organizationId } }));
       toast.success("Template deleted.");
     },
     onError: (err: Error) => toast.error(err.message ?? "Failed to delete template."),
@@ -129,7 +131,7 @@ function TemplatesPage() {
         </div>
       )}
 
-      {showCreate && <CreateTemplateModal onClose={() => setShowCreate(false)} />}
+      {showCreate && <CreateTemplateModal organizationId={organizationId} onClose={() => setShowCreate(false)} />}
     </div>
   );
 }

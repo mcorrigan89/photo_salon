@@ -37,7 +37,9 @@ export type TemplateSlotDto = z.infer<typeof templateSlotDto>;
 
 // ── Template routes ────────────────────────────────────────────────────────────
 
-export const listTemplatesRoute = oc.output(z.array(salonTemplateDto));
+export const listTemplatesRoute = oc
+  .input(z.object({ organizationId: z.string() }))
+  .output(z.array(salonTemplateDto));
 
 export const getTemplateRoute = oc
   .input(z.object({ templateId: z.string() }))
@@ -46,6 +48,7 @@ export const getTemplateRoute = oc
 export const createTemplateRoute = oc
   .input(
     z.object({
+      organizationId: z.string(),
       name: z.string().min(1),
       maxSubmissionsPerMember: z.number().int().min(1).optional(),
       slideshowRevealMode: z.enum(["score_after", "score_alongside"]).optional(),

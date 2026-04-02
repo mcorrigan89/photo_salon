@@ -1,4 +1,3 @@
-import { ORPCError } from "@orpc/server";
 import { type UserContext } from "@/lib/context.ts";
 import { type AppDomain } from "@/domain/domain.ts";
 import { type MemberDto } from "@photo-salon/contract";
@@ -20,26 +19,22 @@ function toDto(entity: MemberEntity): MemberDto {
   };
 }
 
-function requireActiveOrg(ctx: UserContext): string {
-  const orgId = ctx.session?.activeOrganizationId;
-  if (!orgId) throw new ORPCError("FORBIDDEN", { message: "No active organization." });
-  return orgId;
-}
-
 export class MemberController {
-  async listMembers(ctx: UserContext, domain: AppDomain): Promise<MemberDto[]> {
-    const orgId = requireActiveOrg(ctx);
-    const members = await domain.memberService.listMembers(ctx, orgId);
+  async listMembers(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { organizationId: string },
+  ): Promise<MemberDto[]> {
+    const members = await domain.memberService.listMembers(ctx, input.organizationId);
     return members.map(toDto);
   }
 
   async addMember(
     ctx: UserContext,
     domain: AppDomain,
-    input: { name: string; email: string; memberNumber: string | null; role: string },
+    input: { organizationId: string; name: string; email: string; memberNumber: string | null; role: string },
   ): Promise<MemberDto> {
-    const orgId = requireActiveOrg(ctx);
-    const entity = await domain.memberService.addMember(ctx, { ...input, organizationId: orgId });
+    const entity = await domain.memberService.addMember(ctx, input);
     return toDto(entity);
   }
 
