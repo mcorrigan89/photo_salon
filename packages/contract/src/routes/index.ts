@@ -29,6 +29,14 @@ import {
   createCheckoutRoute,
   createFreeOrgRoute,
 } from "./onboarding-routes.ts";
+import {
+  listSalonsRoute,
+  getSalonRoute,
+  createSalonRoute,
+  updateSalonRoute,
+  transitionSalonRoute,
+  deleteSalonRoute,
+} from "./salon-routes.ts";
 
 const healthy = oc.output(z.string());
 
@@ -47,6 +55,14 @@ export const contract = {
     add: addMemberRoute,
     update: updateMemberRoute,
     remove: removeMemberRoute,
+  },
+  salon: {
+    list: listSalonsRoute,
+    get: getSalonRoute,
+    create: createSalonRoute,
+    update: updateSalonRoute,
+    transition: transitionSalonRoute,
+    delete: deleteSalonRoute,
   },
   salonTemplate: {
     list: listTemplatesRoute,

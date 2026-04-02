@@ -5,6 +5,7 @@ import { userController } from "@/controllers/user-controller.ts";
 import { memberController } from "@/controllers/member-controller.ts";
 import { salonTemplateController } from "@/controllers/salon-template-controller.ts";
 import { onboardingController } from "@/controllers/onboarding-controller.ts";
+import { salonController } from "@/controllers/salon-controller.ts";
 
 const healthy = base.healthy.handler(async () => {
   const db = di.get<Database>(dbSymbol);
@@ -92,6 +93,30 @@ const createFreeOrg = authorizedRoute.onboarding.createFreeOrg.handler(async ({ 
   return onboardingController.createFreeOrg(context, context.domain, input);
 });
 
+const listSalons = authorizedRoute.salon.list.handler(async ({ input, context }) => {
+  return salonController.listSalons(context, context.domain, input);
+});
+
+const getSalon = authorizedRoute.salon.get.handler(async ({ input, context }) => {
+  return salonController.getSalon(context, context.domain, input.salonId);
+});
+
+const createSalon = authorizedRoute.salon.create.handler(async ({ input, context }) => {
+  return salonController.createSalon(context, context.domain, input);
+});
+
+const updateSalon = authorizedRoute.salon.update.handler(async ({ input, context }) => {
+  return salonController.updateSalon(context, context.domain, input);
+});
+
+const transitionSalon = authorizedRoute.salon.transition.handler(async ({ input, context }) => {
+  return salonController.transitionSalon(context, context.domain, input);
+});
+
+const deleteSalon = authorizedRoute.salon.delete.handler(async ({ input, context }) => {
+  return salonController.deleteSalon(context, context.domain, input.salonId);
+});
+
 export const routerImplementation = base.router({
   healthy,
   currentUser: {
@@ -101,6 +126,14 @@ export const routerImplementation = base.router({
     config: onboardingConfig,
     createCheckout,
     createFreeOrg,
+  },
+  salon: {
+    list: listSalons,
+    get: getSalon,
+    create: createSalon,
+    update: updateSalon,
+    transition: transitionSalon,
+    delete: deleteSalon,
   },
   member: {
     list: listMembers,

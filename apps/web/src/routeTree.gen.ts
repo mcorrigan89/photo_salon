@@ -19,7 +19,9 @@ import { Route as DashboardMembersRouteImport } from './routes/dashboard/members
 import { Route as DashboardAdminRouteImport } from './routes/dashboard/admin'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as DashboardTemplatesIndexRouteImport } from './routes/dashboard/templates/index'
+import { Route as DashboardSalonsIndexRouteImport } from './routes/dashboard/salons/index'
 import { Route as DashboardTemplatesTemplateIdRouteImport } from './routes/dashboard/templates/$templateId'
+import { Route as DashboardSalonsSalonIdRouteImport } from './routes/dashboard/salons/$salonId'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -71,12 +73,22 @@ const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
   path: '/templates/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardSalonsIndexRoute = DashboardSalonsIndexRouteImport.update({
+  id: '/salons/',
+  path: '/salons/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardTemplatesTemplateIdRoute =
   DashboardTemplatesTemplateIdRouteImport.update({
     id: '/templates/$templateId',
     path: '/templates/$templateId',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const DashboardSalonsSalonIdRoute = DashboardSalonsSalonIdRouteImport.update({
+  id: '/salons/$salonId',
+  path: '/salons/$salonId',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,7 +100,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/members': typeof DashboardMembersRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
   '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
+  '/dashboard/salons/': typeof DashboardSalonsIndexRoute
   '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -100,7 +114,9 @@ export interface FileRoutesByTo {
   '/dashboard/members': typeof DashboardMembersRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
   '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
+  '/dashboard/salons': typeof DashboardSalonsIndexRoute
   '/dashboard/templates': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRoutesById {
@@ -114,7 +130,9 @@ export interface FileRoutesById {
   '/dashboard/members': typeof DashboardMembersRoute
   '/onboarding_/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
   '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
+  '/dashboard/salons/': typeof DashboardSalonsIndexRoute
   '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRouteTypes {
@@ -129,7 +147,9 @@ export interface FileRouteTypes {
     | '/dashboard/members'
     | '/onboarding/success'
     | '/dashboard/'
+    | '/dashboard/salons/$salonId'
     | '/dashboard/templates/$templateId'
+    | '/dashboard/salons/'
     | '/dashboard/templates/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -141,7 +161,9 @@ export interface FileRouteTypes {
     | '/dashboard/members'
     | '/onboarding/success'
     | '/dashboard'
+    | '/dashboard/salons/$salonId'
     | '/dashboard/templates/$templateId'
+    | '/dashboard/salons'
     | '/dashboard/templates'
   id:
     | '__root__'
@@ -154,7 +176,9 @@ export interface FileRouteTypes {
     | '/dashboard/members'
     | '/onboarding_/success'
     | '/dashboard/'
+    | '/dashboard/salons/$salonId'
     | '/dashboard/templates/$templateId'
+    | '/dashboard/salons/'
     | '/dashboard/templates/'
   fileRoutesById: FileRoutesById
 }
@@ -239,11 +263,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTemplatesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/salons/': {
+      id: '/dashboard/salons/'
+      path: '/salons'
+      fullPath: '/dashboard/salons/'
+      preLoaderRoute: typeof DashboardSalonsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/templates/$templateId': {
       id: '/dashboard/templates/$templateId'
       path: '/templates/$templateId'
       fullPath: '/dashboard/templates/$templateId'
       preLoaderRoute: typeof DashboardTemplatesTemplateIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/salons/$salonId': {
+      id: '/dashboard/salons/$salonId'
+      path: '/salons/$salonId'
+      fullPath: '/dashboard/salons/$salonId'
+      preLoaderRoute: typeof DashboardSalonsSalonIdRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
   }
@@ -253,7 +291,9 @@ interface DashboardRouteRouteChildren {
   DashboardAdminRoute: typeof DashboardAdminRoute
   DashboardMembersRoute: typeof DashboardMembersRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardSalonsSalonIdRoute: typeof DashboardSalonsSalonIdRoute
   DashboardTemplatesTemplateIdRoute: typeof DashboardTemplatesTemplateIdRoute
+  DashboardSalonsIndexRoute: typeof DashboardSalonsIndexRoute
   DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute
 }
 
@@ -261,7 +301,9 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardAdminRoute: DashboardAdminRoute,
   DashboardMembersRoute: DashboardMembersRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardSalonsSalonIdRoute: DashboardSalonsSalonIdRoute,
   DashboardTemplatesTemplateIdRoute: DashboardTemplatesTemplateIdRoute,
+  DashboardSalonsIndexRoute: DashboardSalonsIndexRoute,
   DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
 }
 

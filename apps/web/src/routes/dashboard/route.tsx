@@ -24,11 +24,10 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
     <Link
       to={to}
-      className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
-        isActive
-          ? "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-zinc-900"
-          : "text-zinc-400 hover:text-foreground"
-      }`}
+      className={`px-3 py-1.5 rounded-md text-sm transition-colors ${isActive
+        ? "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-zinc-900"
+        : "text-zinc-400 hover:text-foreground"
+        }`}
     >
       {children}
     </Link>

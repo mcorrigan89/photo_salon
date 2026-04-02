@@ -4,9 +4,11 @@ import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
+import { requireAdmin } from "@/lib/require-admin";
 import type { SalonTemplateDto, TemplateCriterionDto, TemplateSlotDto } from "@photo-salon/contract";
 
 export const Route = createFileRoute("/dashboard/templates/$templateId")({
+  beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
   component: TemplateDetailPage,
 });
 
