@@ -2,7 +2,7 @@ import { join } from "path";
 import { readFileSync, readdirSync } from "fs";
 import { Client } from "pg";
 
-async function runMigrations() {
+async function reset() {
   if (!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL environment variable is required");
   }
@@ -11,6 +11,10 @@ async function runMigrations() {
 
   console.info("Connecting to database...");
   await client.connect();
+
+  console.info("Dropping all tables...");
+  await client.query("DROP SCHEMA public CASCADE");
+  await client.query("CREATE SCHEMA public");
 
   const migrationsDir = join(process.cwd(), "migrations");
   const migrationFiles = readdirSync(migrationsDir)
@@ -23,11 +27,11 @@ async function runMigrations() {
     await client.query(sql);
   }
 
-  console.info("Migrations completed successfully!");
+  console.info("Database reset complete!");
   await client.end();
 }
 
-runMigrations().catch((err) => {
-  console.error("Migration failed:", err);
+reset().catch((err) => {
+  console.error("Reset failed:", err);
   process.exit(1);
 });

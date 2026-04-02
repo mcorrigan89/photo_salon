@@ -24,6 +24,11 @@ import {
   updateSlotRoute,
   removeSlotRoute,
 } from "./salon-template-routes.ts";
+import {
+  getOnboardingConfigRoute,
+  createCheckoutRoute,
+  createFreeOrgRoute,
+} from "./onboarding-routes.ts";
 
 const healthy = oc.output(z.string());
 
@@ -31,6 +36,11 @@ export const contract = {
   healthy,
   currentUser: {
     me: currentUserRoute,
+  },
+  onboarding: {
+    config: getOnboardingConfigRoute,
+    createCheckout: createCheckoutRoute,
+    createFreeOrg: createFreeOrgRoute,
   },
   member: {
     list: listMembersRoute,

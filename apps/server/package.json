@@ -37,6 +37,7 @@
     "@photo-salon/database": "workspace:*",
     "@photo-salon/env": "workspace:*",
     "@photo-salon/logger": "workspace:*",
+    "@polar-sh/sdk": "^0.46.7",
     "better-auth": "1.5.4",
     "dotenv": "17.3.1",
     "dotenv-cli": "11.0.0",

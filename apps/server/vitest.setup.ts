@@ -5,5 +5,6 @@ Object.assign(process.env, {
   BETTER_AUTH_URL: "http://localhost:3001",
   SERVER_URL: "http://localhost:3001",
   CLIENT_URL: "http://localhost:3000",
+  POLAR_ENABLED: "false",
   NODE_ENV: "test",
 });

@@ -9,15 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as OnboardingSuccessRouteImport } from './routes/onboarding_.success'
 import { Route as DashboardMembersRouteImport } from './routes/dashboard/members'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as DashboardTemplatesIndexRouteImport } from './routes/dashboard/templates/index'
 import { Route as DashboardTemplatesTemplateIdRouteImport } from './routes/dashboard/templates/$templateId'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -37,6 +44,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
+} as any)
+const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
+  id: '/onboarding_/success',
+  path: '/onboarding/success',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardMembersRoute = DashboardMembersRouteImport.update({
   id: '/members',
@@ -64,8 +76,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/members': typeof DashboardMembersRoute
+  '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
   '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
@@ -73,8 +87,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/members': typeof DashboardMembersRoute
+  '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
   '/dashboard/templates': typeof DashboardTemplatesIndexRoute
@@ -84,8 +100,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/members': typeof DashboardMembersRoute
+  '/onboarding_/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
   '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
@@ -96,8 +114,10 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/onboarding'
     | '/auth/callback'
     | '/dashboard/members'
+    | '/onboarding/success'
     | '/dashboard/'
     | '/dashboard/templates/$templateId'
     | '/dashboard/templates/'
@@ -105,8 +125,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/onboarding'
     | '/auth/callback'
     | '/dashboard/members'
+    | '/onboarding/success'
     | '/dashboard'
     | '/dashboard/templates/$templateId'
     | '/dashboard/templates'
@@ -115,8 +137,10 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/onboarding'
     | '/auth/callback'
     | '/dashboard/members'
+    | '/onboarding_/success'
     | '/dashboard/'
     | '/dashboard/templates/$templateId'
     | '/dashboard/templates/'
@@ -126,11 +150,20 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  OnboardingSuccessRoute: typeof OnboardingSuccessRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -158,6 +191,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/onboarding_/success': {
+      id: '/onboarding_/success'
+      path: '/onboarding/success'
+      fullPath: '/onboarding/success'
+      preLoaderRoute: typeof OnboardingSuccessRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/dashboard/members': {
       id: '/dashboard/members'
@@ -212,7 +252,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  OnboardingSuccessRoute: OnboardingSuccessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

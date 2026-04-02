@@ -4,6 +4,7 @@ import { base, authenticatedRoute, authorizedRoute } from "./base.ts";
 import { userController } from "@/controllers/user-controller.ts";
 import { memberController } from "@/controllers/member-controller.ts";
 import { salonTemplateController } from "@/controllers/salon-template-controller.ts";
+import { onboardingController } from "@/controllers/onboarding-controller.ts";
 
 const healthy = base.healthy.handler(async () => {
   const db = di.get<Database>(dbSymbol);
@@ -79,10 +80,27 @@ const removeSlot = authorizedRoute.salonTemplate.removeSlot.handler(async ({ inp
   return salonTemplateController.removeSlot(context, context.domain, input.slotId);
 });
 
+const onboardingConfig = authorizedRoute.onboarding.config.handler(async ({ context }) => {
+  return onboardingController.getConfig(context, context.domain);
+});
+
+const createCheckout = authorizedRoute.onboarding.createCheckout.handler(async ({ input, context }) => {
+  return onboardingController.createCheckout(context, context.domain, input);
+});
+
+const createFreeOrg = authorizedRoute.onboarding.createFreeOrg.handler(async ({ input, context }) => {
+  return onboardingController.createFreeOrg(context, context.domain, input);
+});
+
 export const routerImplementation = base.router({
   healthy,
   currentUser: {
     me: currentUser,
+  },
+  onboarding: {
+    config: onboardingConfig,
+    createCheckout,
+    createFreeOrg,
   },
   member: {
     list: listMembers,

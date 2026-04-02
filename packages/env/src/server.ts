@@ -19,6 +19,15 @@ const serverSchema = z.object({
   S3_ACCESS_KEY_ID: z.string().default("rustfsadmin"),
   S3_SECRET_ACCESS_KEY: z.string().default("rustfsadmin"),
 
+  POLAR_ENABLED: z
+    .string()
+    .transform((v) => v === "true")
+    .default(() => false),
+  POLAR_ACCESS_TOKEN: z.string().default(""),
+  POLAR_WEBHOOK_SECRET: z.string().default(""),
+  POLAR_MONTHLY_PRODUCT_ID: z.string().default(""),
+  POLAR_YEARLY_PRODUCT_ID: z.string().default(""),
+
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().default(3001),
 });
