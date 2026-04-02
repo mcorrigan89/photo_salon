@@ -12,13 +12,22 @@ export const Route = createFileRoute("/dashboard/templates/$templateId")({
 
 // ── Settings panel ────────────────────────────────────────────────────────────
 
-function TemplateSettings({ template }: { template: SalonTemplateDto }) {
+function useSetTemplate(templateId: string) {
   const queryClient = useQueryClient();
-  const invalidate = () => queryClient.invalidateQueries(orpc.salonTemplate.get.queryOptions({ input: { templateId: template.id } }));
+  return (data: SalonTemplateDto) => {
+    queryClient.setQueryData(
+      orpc.salonTemplate.get.queryOptions({ input: { templateId } }).queryKey,
+      data,
+    );
+  };
+}
+
+function TemplateSettings({ template }: { template: SalonTemplateDto }) {
+  const setTemplate = useSetTemplate(template.id);
 
   const update = useMutation({
     ...orpc.salonTemplate.update.mutationOptions(),
-    onSuccess: () => { invalidate(); toast.success("Saved."); },
+    onSuccess: (data) => { setTemplate(data); toast.success("Saved."); },
     onError: (err: Error) => toast.error(err.message ?? "Failed to save."),
   });
 
@@ -94,28 +103,28 @@ function TemplateSettings({ template }: { template: SalonTemplateDto }) {
 // ── Criteria table ────────────────────────────────────────────────────────────
 
 function CriteriaTable({ template }: { template: SalonTemplateDto }) {
-  const queryClient = useQueryClient();
-  const invalidate = () => queryClient.invalidateQueries(orpc.salonTemplate.get.queryOptions({ input: { templateId: template.id } }));
+  const setTemplate = useSetTemplate(template.id);
   const [editing, setEditing] = useState<string | null>(null);
 
   const add = useMutation({
     ...orpc.salonTemplate.addCriterion.mutationOptions(),
-    onSuccess: () => { invalidate(); toast.success("Criterion added."); },
+    onSuccess: (data) => { setTemplate(data); toast.success("Criterion added."); },
     onError: (err: Error) => toast.error(err.message ?? "Failed to add criterion."),
   });
 
   const remove = useMutation({
     ...orpc.salonTemplate.removeCriterion.mutationOptions(),
-    onSuccess: () => { invalidate(); toast.success("Criterion removed."); },
+    onSuccess: (data) => { setTemplate(data); toast.success("Criterion removed."); },
     onError: (err: Error) => toast.error(err.message ?? "Failed to remove criterion."),
   });
 
   const addForm = useForm({
     defaultValues: { name: "", minScore: 1, maxScore: 10, weight: "1.00" },
     onSubmit: async ({ value }) => {
+      if (!value.name.trim()) return;
       await add.mutateAsync({
         templateId: template.id,
-        name: value.name,
+        name: value.name.trim(),
         minScore: value.minScore,
         maxScore: value.maxScore,
         weight: value.weight,
@@ -148,7 +157,7 @@ function CriteriaTable({ template }: { template: SalonTemplateDto }) {
                 onEditStart={() => setEditing(c.id)}
                 onEditEnd={() => setEditing(null)}
                 onRemove={() => remove.mutate({ criterionId: c.id })}
-                onSaved={invalidate}
+                onSaved={setTemplate}
               />
             ))}
             {/* Add row */}
@@ -211,11 +220,11 @@ function CriterionRow({
   onEditStart: () => void;
   onEditEnd: () => void;
   onRemove: () => void;
-  onSaved: () => void;
+  onSaved: (data: SalonTemplateDto) => void;
 }) {
   const update = useMutation({
     ...orpc.salonTemplate.updateCriterion.mutationOptions(),
-    onSuccess: () => { onSaved(); onEditEnd(); toast.success("Updated."); },
+    onSuccess: (data) => { onSaved(data); onEditEnd(); toast.success("Updated."); },
     onError: (err: Error) => toast.error(err.message ?? "Failed to update."),
   });
 
@@ -268,28 +277,28 @@ function CriterionRow({
 // ── Slots table ───────────────────────────────────────────────────────────────
 
 function SlotsTable({ template }: { template: SalonTemplateDto }) {
-  const queryClient = useQueryClient();
-  const invalidate = () => queryClient.invalidateQueries(orpc.salonTemplate.get.queryOptions({ input: { templateId: template.id } }));
+  const setTemplate = useSetTemplate(template.id);
   const [editing, setEditing] = useState<string | null>(null);
 
   const add = useMutation({
     ...orpc.salonTemplate.addSlot.mutationOptions(),
-    onSuccess: () => { invalidate(); toast.success("Slot added."); },
+    onSuccess: (data) => { setTemplate(data); toast.success("Slot added."); },
     onError: (err: Error) => toast.error(err.message ?? "Failed to add slot."),
   });
 
   const remove = useMutation({
     ...orpc.salonTemplate.removeSlot.mutationOptions(),
-    onSuccess: () => { invalidate(); toast.success("Slot removed."); },
+    onSuccess: (data) => { setTemplate(data); toast.success("Slot removed."); },
     onError: (err: Error) => toast.error(err.message ?? "Failed to remove slot."),
   });
 
   const addForm = useForm({
     defaultValues: { name: "", maxSubmissionsPerMember: "" },
     onSubmit: async ({ value }) => {
+      if (!value.name.trim()) return;
       await add.mutateAsync({
         templateId: template.id,
-        name: value.name,
+        name: value.name.trim(),
         maxSubmissionsPerMember: value.maxSubmissionsPerMember ? Number(value.maxSubmissionsPerMember) : null,
         displayOrder: template.slots.length,
       });
@@ -318,7 +327,7 @@ function SlotsTable({ template }: { template: SalonTemplateDto }) {
                 onEditStart={() => setEditing(s.id)}
                 onEditEnd={() => setEditing(null)}
                 onRemove={() => remove.mutate({ slotId: s.id })}
-                onSaved={invalidate}
+                onSaved={setTemplate}
               />
             ))}
             <tr className="bg-zinc-50/50 dark:bg-zinc-800/20">
@@ -373,11 +382,11 @@ function SlotRow({
   onEditStart: () => void;
   onEditEnd: () => void;
   onRemove: () => void;
-  onSaved: () => void;
+  onSaved: (data: SalonTemplateDto) => void;
 }) {
   const update = useMutation({
     ...orpc.salonTemplate.updateSlot.mutationOptions(),
-    onSuccess: () => { onSaved(); onEditEnd(); toast.success("Updated."); },
+    onSuccess: (data) => { onSaved(data); onEditEnd(); toast.success("Updated."); },
     onError: (err: Error) => toast.error(err.message ?? "Failed to update."),
   });
 

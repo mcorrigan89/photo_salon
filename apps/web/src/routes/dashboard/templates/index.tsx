@@ -15,8 +15,8 @@ function CreateTemplateModal({ organizationId, onClose }: { organizationId: stri
 
   const create = useMutation({
     ...orpc.salonTemplate.create.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(orpc.salonTemplate.list.queryOptions({ input: { organizationId } }));
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: orpc.salonTemplate.list.queryOptions({ input: { organizationId } }).queryKey });
       toast.success("Template created.");
       onClose();
     },
@@ -78,8 +78,8 @@ function TemplatesPage() {
 
   const deleteTemplate = useMutation({
     ...orpc.salonTemplate.delete.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(orpc.salonTemplate.list.queryOptions({ input: { organizationId } }));
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: orpc.salonTemplate.list.queryOptions({ input: { organizationId } }).queryKey });
       toast.success("Template deleted.");
     },
     onError: (err: Error) => toast.error(err.message ?? "Failed to delete template."),

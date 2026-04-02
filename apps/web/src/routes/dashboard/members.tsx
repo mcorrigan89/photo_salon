@@ -26,8 +26,8 @@ function AddMemberModal({ organizationId, onClose }: { organizationId: string; o
 
   const add = useMutation({
     ...orpc.member.add.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(orpc.member.list.queryOptions({ input: { organizationId } }));
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: orpc.member.list.queryOptions({ input: { organizationId } }).queryKey });
       toast.success("Member added.");
       onClose();
     },
@@ -157,8 +157,8 @@ function EditMemberModal({ member, organizationId, onClose }: { member: MemberDt
 
   const update = useMutation({
     ...orpc.member.update.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(orpc.member.list.queryOptions({ input: { organizationId } }));
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: orpc.member.list.queryOptions({ input: { organizationId } }).queryKey });
       toast.success("Member updated.");
       onClose();
     },
@@ -169,12 +169,14 @@ function EditMemberModal({ member, organizationId, onClose }: { member: MemberDt
 
   const form = useForm({
     defaultValues: {
+      name: member.user.name,
       memberNumber: member.memberNumber ?? "",
       role: member.role as "admin" | "judge" | "member",
     },
     onSubmit: async ({ value }) => {
       await update.mutateAsync({
         memberId: member.id,
+        name: value.name !== member.user.name ? value.name : undefined,
         memberNumber: value.memberNumber || null,
         role: value.role,
       });
@@ -185,9 +187,7 @@ function EditMemberModal({ member, organizationId, onClose }: { member: MemberDt
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-900">
         <h2 className="mb-1 text-lg font-semibold">Edit Member</h2>
-        <p className="mb-4 text-sm text-zinc-500">
-          {member.user.name} · {member.user.email}
-        </p>
+        <p className="mb-4 text-sm text-zinc-500">{member.user.email}</p>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -195,6 +195,20 @@ function EditMemberModal({ member, organizationId, onClose }: { member: MemberDt
           }}
           className="space-y-4"
         >
+          <form.Field name="name">
+            {(field) => (
+              <div>
+                <label className="mb-1 block text-sm font-medium">Name</label>
+                <input
+                  className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+          </form.Field>
+
           <form.Field name="memberNumber">
             {(field) => (
               <div>
@@ -258,8 +272,8 @@ function RemoveMemberModal({ member, organizationId, onClose }: { member: Member
 
   const remove = useMutation({
     ...orpc.member.remove.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(orpc.member.list.queryOptions({ input: { organizationId } }));
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: orpc.member.list.queryOptions({ input: { organizationId } }).queryKey });
       toast.success("Member removed.");
       onClose();
     },
