@@ -65,6 +65,17 @@ export class SalonRepository {
     );
   }
 
+  async findByCategoryId(_ctx: UserContext, categoryId: string): Promise<SalonEntity | null> {
+    const rows = await this.db
+      .select({ salonId: salonCategory.salonId })
+      .from(salonCategory)
+      .where(eq(salonCategory.id, categoryId))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return this.loadAggregate(rows[0].salonId);
+  }
+
   // ── Salon save / delete ────────────────────────────────────────────────────
 
   async save(_ctx: UserContext, entity: SalonEntity): Promise<SalonEntity> {

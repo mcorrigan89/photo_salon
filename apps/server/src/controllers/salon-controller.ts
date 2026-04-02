@@ -93,10 +93,34 @@ export class SalonController {
   async transitionSalon(
     ctx: UserContext,
     domain: AppDomain,
-    input: { salonId: string; status: "open" | "judging" | "complete" },
+    input: { salonId: string; status: "draft" | "open" | "judging" | "complete" },
   ): Promise<SalonDto> {
     const salon = await domain.salonService.transitionStatus(ctx, input.salonId, input.status);
     return toDto(salon);
+  }
+
+  async addCategory(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { salonId: string; name: string; maxSubmissionsPerMember?: number | null; displayOrder?: number },
+  ): Promise<SalonDto> {
+    return toDto(await domain.salonService.addCategory(ctx, input));
+  }
+
+  async updateCategory(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { categoryId: string; name?: string; maxSubmissionsPerMember?: number | null; displayOrder?: number },
+  ): Promise<SalonDto> {
+    return toDto(await domain.salonService.updateCategory(ctx, input));
+  }
+
+  async removeCategory(
+    ctx: UserContext,
+    domain: AppDomain,
+    categoryId: string,
+  ): Promise<SalonDto> {
+    return toDto(await domain.salonService.removeCategory(ctx, categoryId));
   }
 
   async deleteSalon(

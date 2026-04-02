@@ -9,9 +9,9 @@ export type SalonStatus = "draft" | "open" | "judging" | "complete";
 
 const VALID_TRANSITIONS: Record<SalonStatus, SalonStatus[]> = {
   draft: ["open"],
-  open: ["judging"],
-  judging: ["complete"],
-  complete: [],
+  open: ["draft", "judging"],
+  judging: ["open", "complete"],
+  complete: ["judging"],
 };
 
 export class SalonEntity {

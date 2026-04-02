@@ -113,6 +113,56 @@ export class SalonService {
     return this.repo.save(ctx, existing.transitionTo(newStatus));
   }
 
+  // ── Categories ──────────────────────────────────────────────────────────
+
+  async addCategory(
+    ctx: UserContext,
+    params: { salonId: string; name: string; maxSubmissionsPerMember?: number | null; displayOrder?: number },
+  ): Promise<SalonEntity> {
+    const salon = await this.requireDraft(ctx, params.salonId);
+    await this.repo.saveCategory(ctx, SalonCategoryEntity.create(params));
+    return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
+  }
+
+  async updateCategory(
+    ctx: UserContext,
+    params: { categoryId: string; name?: string; maxSubmissionsPerMember?: number | null; displayOrder?: number },
+  ): Promise<SalonEntity> {
+    const { categoryId, ...updates } = params;
+    const salon = await this.findSalonByCategoryId(ctx, categoryId);
+    this.requireDraftStatus(salon);
+    const category = salon.categories.find((c) => c.id === categoryId)!;
+    await this.repo.saveCategory(ctx, category.with(updates));
+    return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
+  }
+
+  async removeCategory(ctx: UserContext, categoryId: string): Promise<SalonEntity> {
+    const salon = await this.findSalonByCategoryId(ctx, categoryId);
+    this.requireDraftStatus(salon);
+    const category = salon.categories.find((c) => c.id === categoryId)!;
+    await this.repo.deleteCategory(ctx, category);
+    return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
+  }
+
+  private async requireDraft(ctx: UserContext, salonId: string): Promise<SalonEntity> {
+    const salon = await this.repo.findById(ctx, salonId);
+    if (!salon) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
+    this.requireDraftStatus(salon);
+    return salon;
+  }
+
+  private requireDraftStatus(salon: SalonEntity): void {
+    if (salon.status !== "draft") {
+      throw new ORPCError("BAD_REQUEST", { message: "Categories can only be modified in draft." });
+    }
+  }
+
+  private async findSalonByCategoryId(ctx: UserContext, categoryId: string): Promise<SalonEntity> {
+    const salon = await this.repo.findByCategoryId(ctx, categoryId);
+    if (!salon) throw new ORPCError("NOT_FOUND", { message: "Category not found." });
+    return salon;
+  }
+
   async deleteSalon(ctx: UserContext, salonId: string): Promise<void> {
     const existing = await this.repo.findById(ctx, salonId);
     if (!existing) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });

@@ -341,7 +341,7 @@ describe("displayOrder sorting", () => {
 // ── SalonEntity status machine ────────────────────────────────────────────────
 
 describe("SalonEntity status transitions", () => {
-  it("allows draft → open → judging → complete", () => {
+  it("allows forward: draft → open → judging → complete", () => {
     const entity = createSalon();
     expect(entity.status).toBe("draft");
     expect(entity.canTransitionTo("open")).toBe(true);
@@ -358,17 +358,34 @@ describe("SalonEntity status transitions", () => {
     expect(complete.status).toBe("complete");
   });
 
-  it("rejects invalid transitions", () => {
+  it("allows backward: open → draft, judging → open, complete → judging", () => {
+    const open = createSalon().transitionTo("open");
+    expect(open.canTransitionTo("draft")).toBe(true);
+    expect(open.transitionTo("draft").status).toBe("draft");
+
+    const judging = open.transitionTo("judging");
+    expect(judging.canTransitionTo("open")).toBe(true);
+    expect(judging.transitionTo("open").status).toBe("open");
+
+    const complete = judging.transitionTo("complete");
+    expect(complete.canTransitionTo("judging")).toBe(true);
+    expect(complete.transitionTo("judging").status).toBe("judging");
+  });
+
+  it("rejects skipping statuses", () => {
     const entity = createSalon();
     expect(entity.canTransitionTo("judging")).toBe(false);
     expect(entity.canTransitionTo("complete")).toBe(false);
     expect(() => entity.transitionTo("judging")).toThrow("Cannot transition");
   });
 
-  it("rejects transitions from complete", () => {
-    const complete = createSalon().transitionTo("open").transitionTo("judging").transitionTo("complete");
-    expect(complete.canTransitionTo("draft")).toBe(false);
+  it("rejects jumping more than one step back", () => {
+    const judging = createSalon().transitionTo("open").transitionTo("judging");
+    expect(judging.canTransitionTo("draft")).toBe(false);
+    expect(() => judging.transitionTo("draft")).toThrow("Cannot transition");
+
+    const complete = judging.transitionTo("complete");
     expect(complete.canTransitionTo("open")).toBe(false);
-    expect(() => complete.transitionTo("draft")).toThrow("Cannot transition");
+    expect(complete.canTransitionTo("draft")).toBe(false);
   });
 });
