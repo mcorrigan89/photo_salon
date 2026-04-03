@@ -197,7 +197,6 @@ function ActiveSalonSubmissions({ salon }: { salon: SalonDto }) {
   const activeCount = categorySubmissions.filter((s) => s.status !== "withdrawn").length;
   const category = salon.categories.find((c) => c.id === activeCategoryId);
   const maxPerCategory = category?.maxSubmissionsPerMember ?? salon.maxSubmissionsPerMember;
-  const totalActive = mySubmissions?.filter((s) => s.status !== "withdrawn").length ?? 0;
 
   return (
     <div>

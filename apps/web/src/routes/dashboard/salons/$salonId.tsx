@@ -562,6 +562,71 @@ function CategoryRow({
   );
 }
 
+// ── Submission summary (admin view when not draft) ───────────────────────────
+
+function SubmissionSummary({ salon }: { salon: SalonDto }) {
+  const { data: summary } = useSuspenseQuery(
+    orpc.submission.salonSummary.queryOptions({ input: { salonId: salon.id } }),
+  );
+
+  // Group by member
+  const memberMap = new Map<string, { name: string; number: string | null; categories: Map<string, number> }>();
+  for (const row of summary) {
+    if (!memberMap.has(row.memberId)) {
+      memberMap.set(row.memberId, { name: row.memberName, number: row.memberNumber, categories: new Map() });
+    }
+    memberMap.get(row.memberId)!.categories.set(row.categoryId, row.count);
+  }
+
+  const members = Array.from(memberMap.entries()).sort((a, b) => a[1].name.localeCompare(b[1].name));
+  const totalSubmissions = summary.reduce((sum, r) => sum + r.count, 0);
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-semibold text-zinc-700 dark:text-zinc-300">Submissions</h2>
+        <span className="text-sm text-muted-foreground">{totalSubmissions} total</span>
+      </div>
+
+      {members.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No submissions yet.</p>
+      ) : (
+        <div className="overflow-hidden rounded-lg border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-zinc-50 dark:bg-zinc-800/50">
+              <tr>
+                <th className="px-4 py-2 text-left font-medium text-zinc-500">Member</th>
+                <th className="px-4 py-2 text-left font-medium text-zinc-500">#</th>
+                {salon.categories.map((c) => (
+                  <th key={c.id} className="px-4 py-2 text-center font-medium text-zinc-500">{c.name}</th>
+                ))}
+                <th className="px-4 py-2 text-center font-medium text-zinc-500">Total</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              {members.map(([memberId, member]) => {
+                const total = Array.from(member.categories.values()).reduce((s, n) => s + n, 0);
+                return (
+                  <tr key={memberId} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
+                    <td className="px-4 py-2 font-medium">{member.name}</td>
+                    <td className="px-4 py-2 text-zinc-500">{member.number ?? "—"}</td>
+                    {salon.categories.map((c) => (
+                      <td key={c.id} className="px-4 py-2 text-center text-zinc-500">
+                        {member.categories.get(c.id) ?? 0}
+                      </td>
+                    ))}
+                    <td className="px-4 py-2 text-center font-medium">{total}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function SalonDetailPage() {
@@ -569,6 +634,8 @@ function SalonDetailPage() {
   const { data: salon } = useSuspenseQuery(
     orpc.salon.get.queryOptions({ input: { salonId } }),
   );
+
+  const isDraft = salon.status === "draft";
 
   return (
     <div className="p-8">
@@ -593,10 +660,14 @@ function SalonDetailPage() {
           <h2 className="mb-4 font-semibold text-zinc-700 dark:text-zinc-300">Settings</h2>
           <SalonSettings salon={salon} />
         </div>
-
         <div className="space-y-8">
-          <CriteriaTable salon={salon} />
-          <CategoriesTable salon={salon} />
+          {isDraft && (
+            <>
+              <CriteriaTable salon={salon} />
+              <CategoriesTable salon={salon} />
+            </>
+          )}
+          {!isDraft && <SubmissionSummary salon={salon} />}
         </div>
       </div>
     </div>

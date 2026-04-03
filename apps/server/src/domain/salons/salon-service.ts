@@ -3,6 +3,7 @@ import { ORPCError } from "@orpc/server";
 import { type UserContext } from "@/lib/context.ts";
 import { SalonTemplateRepository } from "@/domain/salon-templates/salon-template-repository.ts";
 import { SalonRepository } from "./salon-repository.ts";
+import { SubmissionRepository } from "@/domain/submissions/submission-repository.ts";
 import { SalonEntity, type SalonStatus } from "./salon-entity.ts";
 import { SalonScoringCriterionEntity } from "./salon-scoring-criterion-entity.ts";
 import { SalonCategoryEntity } from "./salon-category-entity.ts";
@@ -12,6 +13,7 @@ export class SalonService {
   constructor(
     @inject(SalonRepository) private repo: SalonRepository,
     @inject(SalonTemplateRepository) private templateRepo: SalonTemplateRepository,
+    @inject(SubmissionRepository) private submissionRepo: SubmissionRepository,
   ) {}
 
   async listSalons(ctx: UserContext, organizationId: string): Promise<SalonEntity[]> {
@@ -193,6 +195,14 @@ export class SalonService {
     ctx.logger.info("Removing category", categoryId);
     const salon = await this.findSalonByCategoryId(ctx, categoryId);
     this.requireDraftStatus(salon);
+
+    const hasSubmissions = await this.submissionRepo.hasSubmissionsForCategory(ctx, categoryId);
+    if (hasSubmissions) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Cannot delete a category that has submissions. Withdraw or remove submissions first.",
+      });
+    }
+
     const category = salon.categories.find((c) => c.id === categoryId)!;
     await this.repo.deleteCategory(ctx, category);
     return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
@@ -223,9 +233,13 @@ export class SalonService {
     if (!existing) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
 
     if (existing.status !== "draft") {
-      ctx.logger.warn("Cannot delete non-draft salon", salonId, existing.status);
+      throw new ORPCError("BAD_REQUEST", { message: "Only draft salons can be deleted." });
+    }
+
+    const hasSubmissions = await this.submissionRepo.hasSubmissionsForSalon(ctx, salonId);
+    if (hasSubmissions) {
       throw new ORPCError("BAD_REQUEST", {
-        message: "Only draft salons can be deleted.",
+        message: "Cannot delete a salon that has submissions.",
       });
     }
 

@@ -40,3 +40,20 @@ export const submitPrintRoute = oc
 export const withdrawSubmissionRoute = oc
   .input(z.object({ submissionId: z.string() }))
   .output(submissionDto);
+
+// ── Admin routes ──────────────────────────────────────────────────────────────
+
+export const salonSubmissionSummaryDto = z.object({
+  memberId: z.string(),
+  memberName: z.string(),
+  memberNumber: z.string().nullable(),
+  categoryId: z.string(),
+  categoryName: z.string(),
+  count: z.number(),
+});
+
+export type SalonSubmissionSummaryDto = z.infer<typeof salonSubmissionSummaryDto>;
+
+export const getSalonSubmissionSummaryRoute = oc
+  .input(z.object({ salonId: z.string() }))
+  .output(z.array(salonSubmissionSummaryDto));
