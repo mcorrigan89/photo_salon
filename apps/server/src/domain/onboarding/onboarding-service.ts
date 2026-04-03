@@ -54,17 +54,28 @@ export class OnboardingService {
     }
 
     const polar = getPolar();
-    const checkout = await polar.checkouts.create({
-      products: [productId],
-      successUrl: `${getSharedEnv().CLIENT_URL}/onboarding/success?checkout_id={CHECKOUT_ID}`,
-      customerEmail: params.email,
-      metadata: {
-        userId: params.userId,
-        clubName: params.clubName,
-        clubSlug: slug,
-      },
-    });
+    const successUrl = `${getSharedEnv().CLIENT_URL}/onboarding/success?checkout_id={CHECKOUT_ID}`;
 
+    ctx.logger.info("Calling Polar checkouts.create", productId, slug, params.email);
+
+    let checkout;
+    try {
+      checkout = await polar.checkouts.create({
+        products: [productId],
+        successUrl,
+        customerEmail: params.email,
+        metadata: {
+          userId: params.userId,
+          clubName: params.clubName,
+          clubSlug: slug,
+        },
+      });
+    } catch (err) {
+      ctx.logger.error(err instanceof Error ? err : new Error(String(err)));
+      throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to create checkout." });
+    }
+
+    ctx.logger.info("Polar checkout created", checkout.id, checkout.url);
     return { checkoutUrl: checkout.url };
   }
 
@@ -72,6 +83,7 @@ export class OnboardingService {
     ctx: UserContext,
     params: { clubName: string; userId: string },
   ): Promise<CreateOrgResult> {
+    ctx.logger.info("Creating free org", params.clubName, params.userId);
     const env = getServerEnv();
     if (env.POLAR_ENABLED) {
       throw new ORPCError("BAD_REQUEST", { message: "Free org creation is disabled when Polar is enabled." });
@@ -81,18 +93,22 @@ export class OnboardingService {
 
     const existing = await this.orgService.findBySlug(ctx, slug);
     if (existing) {
+      ctx.logger.warn("Club name already taken", slug);
       throw new ORPCError("CONFLICT", { message: "A club with that name already exists." });
     }
 
-    return this.orgService.createOrganization(ctx, {
+    const result = await this.orgService.createOrganization(ctx, {
       name: params.clubName,
       slug,
       userId: params.userId,
     });
+    ctx.logger.info("Free org created", result.organizationId, result.slug);
+    return result;
   }
 
   async hasOrganization(ctx: UserContext, userId: string): Promise<boolean> {
     const memberships = await this.orgService.findUserOrganizations(ctx, userId);
+    ctx.logger.trace("hasOrganization check", userId, memberships.length > 0);
     return memberships.length > 0;
   }
 }

@@ -10,13 +10,13 @@ export { dbSymbol, loggerSymbol, postmarkSymbol, authSymbol };
 
 di.bind(dbSymbol).toDynamicValue(() => {
   return createDatabase(getServerEnv().DATABASE_URL);
-});
+}).inSingletonScope();
 
 di.bind(loggerSymbol).toConstantValue(logger);
 
 di.bind(postmarkSymbol).toDynamicValue(() => {
   return new ServerClient(getServerEnv().POSTMARK_API_KEY);
-});
+}).inSingletonScope();
 
 di.bind<AuthService>(authSymbol).toConstantValue(auth);
 

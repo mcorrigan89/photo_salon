@@ -29,7 +29,11 @@ const getClientLink = createIsomorphicFn()
       url: `${serverUrl}/rpc`,
       headers: () => getRequestHeaders(),
       fetch: (request, init) => {
-        return globalThis.fetch(request, { ...init, credentials: "include" });
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        return globalThis
+          .fetch(request, { ...init, credentials: "include", signal: controller.signal })
+          .finally(() => clearTimeout(timeout));
       },
       plugins: [
         new BatchLinkPlugin({

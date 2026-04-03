@@ -1,5 +1,5 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { orpc } from "@/lib/api-client";
 import { organization } from "@/lib/auth-client";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/onboarding_/success")({
 });
 
 function OnboardingSuccessPage() {
-  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // Poll onboarding config until org exists (webhook may take a moment)
   const { data: config } = useQuery({
@@ -28,19 +28,22 @@ function OnboardingSuccessPage() {
   useEffect(() => {
     if (!config?.hasOrganization) return;
 
-    // Org was created by the webhook — set it active and go to dashboard
     async function activate() {
-      // Refresh session to pick up the new org
-      await organization.list().then(async (res) => {
-        const orgs = res.data;
-        if (orgs && orgs.length > 0) {
-          await organization.setActive({ organizationId: orgs[0].id });
-        }
-      });
-      navigate({ to: "/dashboard" });
+      // Get the org list and set the first one active
+      const res = await organization.list();
+      const orgs = res.data;
+      if (orgs && orgs.length > 0) {
+        await organization.setActive({ organizationId: orgs[0].id });
+      }
+
+      // Invalidate the currentUser cache so the dashboard picks up the new activeOrganization
+      await queryClient.invalidateQueries({ queryKey: orpc.currentUser.me.queryOptions().queryKey });
+
+      // Hard navigate to flush all SSR/cache state
+      window.location.assign("/dashboard");
     }
     activate();
-  }, [config?.hasOrganization, navigate]);
+  }, [config?.hasOrganization, queryClient]);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">

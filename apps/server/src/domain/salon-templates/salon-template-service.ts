@@ -11,10 +11,12 @@ export class SalonTemplateService {
   constructor(@inject(SalonTemplateRepository) private repo: SalonTemplateRepository) {}
 
   async listTemplates(ctx: UserContext, organizationId: string): Promise<SalonTemplateEntity[]> {
+    ctx.logger.trace("Listing templates", organizationId);
     return this.repo.listByOrganization(ctx, organizationId);
   }
 
   async getTemplate(ctx: UserContext, templateId: string): Promise<SalonTemplateEntity> {
+    ctx.logger.trace("Getting template", templateId);
     const template = await this.repo.findById(ctx, templateId);
     if (!template) throw new ORPCError("NOT_FOUND", { message: "Template not found." });
     return template;
@@ -29,7 +31,10 @@ export class SalonTemplateService {
       slideshowRevealMode?: "score_after" | "score_alongside";
     },
   ): Promise<SalonTemplateEntity> {
-    return this.repo.save(ctx, SalonTemplateEntity.create(params));
+    ctx.logger.info("Creating template", params.name, params.organizationId);
+    const result = await this.repo.save(ctx, SalonTemplateEntity.create(params));
+    ctx.logger.info("Template created", result.id);
+    return result;
   }
 
   async updateTemplate(
@@ -41,15 +46,18 @@ export class SalonTemplateService {
       slideshowRevealMode?: "score_after" | "score_alongside";
     },
   ): Promise<SalonTemplateEntity> {
+    ctx.logger.info("Updating template", params.templateId);
     const template = await this.repo.findById(ctx, params.templateId);
     if (!template) throw new ORPCError("NOT_FOUND", { message: "Template not found." });
     return this.repo.save(ctx, template.with(params));
   }
 
   async deleteTemplate(ctx: UserContext, templateId: string): Promise<void> {
+    ctx.logger.info("Deleting template", templateId);
     const template = await this.repo.findById(ctx, templateId);
     if (!template) throw new ORPCError("NOT_FOUND", { message: "Template not found." });
     await this.repo.delete(ctx, template);
+    ctx.logger.info("Template deleted", templateId);
   }
 
   // ── Criteria ───────────────────────────────────────────────────────────────
@@ -65,6 +73,7 @@ export class SalonTemplateService {
       displayOrder?: number;
     },
   ): Promise<SalonTemplateEntity> {
+    ctx.logger.info("Adding criterion to template", params.templateId, params.name);
     const template = await this.repo.findById(ctx, params.templateId);
     if (!template) throw new ORPCError("NOT_FOUND", { message: "Template not found." });
     await this.repo.saveCriterion(ctx, TemplateScoringCriterionEntity.create(params));
@@ -82,6 +91,7 @@ export class SalonTemplateService {
       displayOrder?: number;
     },
   ): Promise<SalonTemplateEntity> {
+    ctx.logger.info("Updating criterion", params.criterionId);
     const { criterionId, ...updates } = params;
     const template = await this.findTemplateByCriterionId(ctx, criterionId);
     const criterion = template.criteria.find((c) => c.id === criterionId)!;
@@ -90,6 +100,7 @@ export class SalonTemplateService {
   }
 
   async removeCriterion(ctx: UserContext, criterionId: string): Promise<SalonTemplateEntity> {
+    ctx.logger.info("Removing criterion", criterionId);
     const template = await this.findTemplateByCriterionId(ctx, criterionId);
     const criterion = template.criteria.find((c) => c.id === criterionId)!;
     await this.repo.deleteCriterion(ctx, criterion);
@@ -107,6 +118,7 @@ export class SalonTemplateService {
       displayOrder?: number;
     },
   ): Promise<SalonTemplateEntity> {
+    ctx.logger.info("Adding slot to template", params.templateId, params.name);
     const template = await this.repo.findById(ctx, params.templateId);
     if (!template) throw new ORPCError("NOT_FOUND", { message: "Template not found." });
     await this.repo.saveSlot(ctx, TemplateCategorySlotEntity.create(params));
@@ -122,6 +134,7 @@ export class SalonTemplateService {
       displayOrder?: number;
     },
   ): Promise<SalonTemplateEntity> {
+    ctx.logger.info("Updating slot", params.slotId);
     const { slotId, ...updates } = params;
     const template = await this.findTemplateBySlotId(ctx, slotId);
     const slot = template.slots.find((s) => s.id === slotId)!;
@@ -130,6 +143,7 @@ export class SalonTemplateService {
   }
 
   async removeSlot(ctx: UserContext, slotId: string): Promise<SalonTemplateEntity> {
+    ctx.logger.info("Removing slot", slotId);
     const template = await this.findTemplateBySlotId(ctx, slotId);
     const slot = template.slots.find((s) => s.id === slotId)!;
     await this.repo.deleteSlot(ctx, slot);
@@ -142,12 +156,6 @@ export class SalonTemplateService {
     ctx: UserContext,
     criterionId: string,
   ): Promise<SalonTemplateEntity> {
-    // We load all templates for the org via a broader search isn't available here,
-    // so we rely on the criterion carrying its templateId.
-    // First find the criterion's templateId via a direct DB-backed approach:
-    // The criterion entity isn't stored independently — we must load the template.
-    // Since we don't have a findByCriterionId query, we use the service's known
-    // templates. For now we use a repo extension that queries by criterionId.
     const template = await this.repo.findByCriterionId(ctx, criterionId);
     if (!template) throw new ORPCError("NOT_FOUND", { message: "Criterion not found." });
     return template;

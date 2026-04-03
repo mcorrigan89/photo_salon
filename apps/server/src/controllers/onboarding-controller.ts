@@ -24,7 +24,10 @@ export class OnboardingController {
     const userId = requireUserId(ctx);
     const email = ctx.user?.email;
     if (!email) throw new ORPCError("FORBIDDEN");
-    return domain.onboardingService.createCheckout(ctx, { ...input, userId, email });
+    ctx.logger.info("Creating Polar checkout", input.plan, input.clubName);
+    const result = await domain.onboardingService.createCheckout(ctx, { ...input, userId, email });
+    ctx.logger.info("Polar checkout created", result.checkoutUrl);
+    return result;
   }
 
   async createFreeOrg(
