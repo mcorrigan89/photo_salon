@@ -92,6 +92,38 @@ export const deleteSalonRoute = oc
   .input(z.object({ salonId: z.string() }))
   .output(z.object({ success: z.boolean() }));
 
+// ── Criterion routes ──────────────────────────────────────────────────────────
+
+export const addSalonCriterionRoute = oc
+  .input(
+    z.object({
+      salonId: z.string(),
+      name: z.string().min(1),
+      minScore: z.number().int(),
+      maxScore: z.number().int(),
+      weight: z.string(),
+      displayOrder: z.number().int().optional(),
+    }),
+  )
+  .output(salonDto);
+
+export const updateSalonCriterionRoute = oc
+  .input(
+    z.object({
+      criterionId: z.string(),
+      name: z.string().min(1).optional(),
+      minScore: z.number().int().optional(),
+      maxScore: z.number().int().optional(),
+      weight: z.string().optional(),
+      displayOrder: z.number().int().optional(),
+    }),
+  )
+  .output(salonDto);
+
+export const removeSalonCriterionRoute = oc
+  .input(z.object({ criterionId: z.string() }))
+  .output(salonDto);
+
 // ── Category routes ───────────────────────────────────────────────────────────
 
 export const addCategoryRoute = oc

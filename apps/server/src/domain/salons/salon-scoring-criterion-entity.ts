@@ -4,8 +4,8 @@ import { type InferSelectModel } from "drizzle-orm";
 type SalonScoringCriterionModel = InferSelectModel<typeof salonScoringCriterion>;
 
 /**
- * Immutable snapshot of a scoring criterion, copied from the template at salon creation.
- * Never modified after creation — guarantees historical score integrity.
+ * Snapshot of a scoring criterion, copied from the template at salon creation.
+ * Editable while the salon is in draft; immutable once open.
  */
 export class SalonScoringCriterionEntity {
   private constructor(
@@ -34,6 +34,24 @@ export class SalonScoringCriterionEntity {
       params.maxScore,
       params.weight,
       params.displayOrder,
+    );
+  }
+
+  with(params: {
+    name?: string;
+    minScore?: number;
+    maxScore?: number;
+    weight?: string;
+    displayOrder?: number;
+  }): SalonScoringCriterionEntity {
+    return new SalonScoringCriterionEntity(
+      this.id,
+      this.salonId,
+      params.name ?? this.name,
+      params.minScore ?? this.minScore,
+      params.maxScore ?? this.maxScore,
+      params.weight ?? this.weight,
+      params.displayOrder ?? this.displayOrder,
     );
   }
 

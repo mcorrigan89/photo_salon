@@ -99,6 +99,30 @@ export class SalonController {
     return toDto(salon);
   }
 
+  async addCriterion(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { salonId: string; name: string; minScore: number; maxScore: number; weight: string; displayOrder?: number },
+  ): Promise<SalonDto> {
+    return toDto(await domain.salonService.addCriterion(ctx, input));
+  }
+
+  async updateCriterion(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { criterionId: string; name?: string; minScore?: number; maxScore?: number; weight?: string; displayOrder?: number },
+  ): Promise<SalonDto> {
+    return toDto(await domain.salonService.updateCriterion(ctx, input));
+  }
+
+  async removeCriterion(
+    ctx: UserContext,
+    domain: AppDomain,
+    criterionId: string,
+  ): Promise<SalonDto> {
+    return toDto(await domain.salonService.removeCriterion(ctx, criterionId));
+  }
+
   async addCategory(
     ctx: UserContext,
     domain: AppDomain,

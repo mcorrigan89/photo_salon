@@ -140,6 +140,51 @@ export class SalonRepository {
     );
   }
 
+  async saveCriterion(
+    _ctx: UserContext,
+    criterion: SalonScoringCriterionEntity,
+  ): Promise<SalonScoringCriterionEntity> {
+    const [row] = await this.db
+      .insert(salonScoringCriterion)
+      .values({
+        id: criterion.id,
+        salonId: criterion.salonId,
+        name: criterion.name,
+        minScore: criterion.minScore,
+        maxScore: criterion.maxScore,
+        weight: criterion.weight,
+        displayOrder: criterion.displayOrder,
+      })
+      .onConflictDoUpdate({
+        target: salonScoringCriterion.id,
+        set: {
+          name: criterion.name,
+          minScore: criterion.minScore,
+          maxScore: criterion.maxScore,
+          weight: criterion.weight,
+          displayOrder: criterion.displayOrder,
+        },
+      })
+      .returning();
+
+    return SalonScoringCriterionEntity.fromModel(row);
+  }
+
+  async deleteCriterion(_ctx: UserContext, criterion: SalonScoringCriterionEntity): Promise<void> {
+    await this.db.delete(salonScoringCriterion).where(eq(salonScoringCriterion.id, criterion.id));
+  }
+
+  async findByCriterionId(_ctx: UserContext, criterionId: string): Promise<SalonEntity | null> {
+    const rows = await this.db
+      .select({ salonId: salonScoringCriterion.salonId })
+      .from(salonScoringCriterion)
+      .where(eq(salonScoringCriterion.id, criterionId))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return this.loadAggregate(rows[0].salonId);
+  }
+
   // ── Category save / delete ─────────────────────────────────────────────────
 
   async saveCategory(

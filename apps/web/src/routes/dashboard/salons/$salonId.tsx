@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
 import { useOrganizationId } from "@/lib/use-org";
 import { requireAdmin } from "@/lib/require-admin";
-import type { SalonDto, SalonCategoryDto } from "@photo-salon/contract";
+import type { SalonDto, SalonCriterionDto, SalonCategoryDto } from "@photo-salon/contract";
 
 export const Route = createFileRoute("/dashboard/salons/$salonId")({
   beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
@@ -205,6 +205,169 @@ function SalonSettings({ salon }: { salon: SalonDto }) {
         </button>
       )}
     </form>
+  );
+}
+
+// ── Criteria table ───────────────────────────────────────────────────────────
+
+function CriteriaTable({ salon }: { salon: SalonDto }) {
+  const setSalon = useSetSalon(salon.id);
+  const [editing, setEditing] = useState<string | null>(null);
+  const isDraft = salon.status === "draft";
+
+  const add = useMutation({
+    ...orpc.salon.addCriterion.mutationOptions(),
+    onSuccess: (data) => { setSalon(data); toast.success("Criterion added."); },
+    onError: (err: Error) => toast.error(err.message ?? "Failed to add criterion."),
+  });
+
+  const remove = useMutation({
+    ...orpc.salon.removeCriterion.mutationOptions(),
+    onSuccess: (data) => { setSalon(data); toast.success("Criterion removed."); },
+    onError: (err: Error) => toast.error(err.message ?? "Failed to remove criterion."),
+  });
+
+  const addForm = useForm({
+    defaultValues: { name: "", minScore: 1, maxScore: 10, weight: "1.00" },
+    onSubmit: async ({ value }) => {
+      if (!value.name.trim()) return;
+      await add.mutateAsync({
+        salonId: salon.id,
+        name: value.name.trim(),
+        minScore: value.minScore,
+        maxScore: value.maxScore,
+        weight: value.weight,
+        displayOrder: salon.criteria.length,
+      });
+      addForm.reset();
+    },
+  });
+
+  return (
+    <div>
+      <h2 className="mb-3 font-semibold text-zinc-700 dark:text-zinc-300">Scoring Criteria</h2>
+      <div className="overflow-hidden rounded-lg border border-border">
+        <table className="w-full text-sm">
+          <thead className="bg-zinc-50 dark:bg-zinc-800/50">
+            <tr>
+              <th className="px-4 py-2 text-left font-medium text-zinc-500">Name</th>
+              <th className="px-4 py-2 text-left font-medium text-zinc-500">Min</th>
+              <th className="px-4 py-2 text-left font-medium text-zinc-500">Max</th>
+              <th className="px-4 py-2 text-left font-medium text-zinc-500">Weight</th>
+              {isDraft && <th className="px-4 py-2" />}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            {salon.criteria.map((c) => (
+              <CriterionRow
+                key={c.id}
+                criterion={c}
+                isEditing={editing === c.id}
+                onEditStart={() => setEditing(c.id)}
+                onEditEnd={() => setEditing(null)}
+                onRemove={() => remove.mutate({ criterionId: c.id })}
+                onSaved={setSalon}
+                isDraft={isDraft}
+              />
+            ))}
+            {isDraft && (
+              <tr className="bg-zinc-50/50 dark:bg-zinc-800/20">
+                <td className="px-4 py-2">
+                  <addForm.Field name="name">
+                    {(field) => <input className="w-full rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" placeholder="Criterion name" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />}
+                  </addForm.Field>
+                </td>
+                <td className="px-4 py-2">
+                  <addForm.Field name="minScore">
+                    {(field) => <input type="number" className="w-16 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" value={field.state.value} onChange={(e) => field.handleChange(Number(e.target.value))} />}
+                  </addForm.Field>
+                </td>
+                <td className="px-4 py-2">
+                  <addForm.Field name="maxScore">
+                    {(field) => <input type="number" className="w-16 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" value={field.state.value} onChange={(e) => field.handleChange(Number(e.target.value))} />}
+                  </addForm.Field>
+                </td>
+                <td className="px-4 py-2">
+                  <addForm.Field name="weight">
+                    {(field) => <input className="w-20 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />}
+                  </addForm.Field>
+                </td>
+                <td className="px-4 py-2 text-right">
+                  <button onClick={() => addForm.handleSubmit()} disabled={add.isPending} className="text-xs font-medium text-zinc-700 hover:text-zinc-900 disabled:opacity-50 dark:text-zinc-300">
+                    {add.isPending ? "Adding…" : "Add"}
+                  </button>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function CriterionRow({
+  criterion, isEditing, onEditStart, onEditEnd, onRemove, onSaved, isDraft,
+}: {
+  criterion: SalonCriterionDto;
+  isEditing: boolean;
+  onEditStart: () => void;
+  onEditEnd: () => void;
+  onRemove: () => void;
+  onSaved: (data: SalonDto) => void;
+  isDraft: boolean;
+}) {
+  const update = useMutation({
+    ...orpc.salon.updateCriterion.mutationOptions(),
+    onSuccess: (data) => { onSaved(data); onEditEnd(); toast.success("Updated."); },
+    onError: (err: Error) => toast.error(err.message ?? "Failed to update."),
+  });
+
+  const form = useForm({
+    defaultValues: { name: criterion.name, minScore: criterion.minScore, maxScore: criterion.maxScore, weight: criterion.weight },
+    onSubmit: async ({ value }) => {
+      await update.mutateAsync({ criterionId: criterion.id, ...value });
+    },
+  });
+
+  if (!isEditing) {
+    return (
+      <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30">
+        <td className="px-4 py-2 font-medium">{criterion.name}</td>
+        <td className="px-4 py-2 text-zinc-500">{criterion.minScore}</td>
+        <td className="px-4 py-2 text-zinc-500">{criterion.maxScore}</td>
+        <td className="px-4 py-2 text-zinc-500">{criterion.weight}×</td>
+        {isDraft && (
+          <td className="px-4 py-2 text-right">
+            <button onClick={onEditStart} className="mr-3 text-xs text-zinc-500 hover:text-foreground">Edit</button>
+            <button onClick={onRemove} className="text-xs text-red-500 hover:text-red-700">Remove</button>
+          </td>
+        )}
+      </tr>
+    );
+  }
+
+  return (
+    <tr className="bg-blue-50/30 dark:bg-blue-950/20">
+      <td className="px-4 py-2">
+        <form.Field name="name">{(field) => <input className="w-full rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />}</form.Field>
+      </td>
+      <td className="px-4 py-2">
+        <form.Field name="minScore">{(field) => <input type="number" className="w-16 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" value={field.state.value} onChange={(e) => field.handleChange(Number(e.target.value))} />}</form.Field>
+      </td>
+      <td className="px-4 py-2">
+        <form.Field name="maxScore">{(field) => <input type="number" className="w-16 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" value={field.state.value} onChange={(e) => field.handleChange(Number(e.target.value))} />}</form.Field>
+      </td>
+      <td className="px-4 py-2">
+        <form.Field name="weight">{(field) => <input className="w-20 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />}</form.Field>
+      </td>
+      <td className="px-4 py-2 text-right">
+        <button onClick={() => form.handleSubmit()} disabled={update.isPending} className="mr-3 text-xs font-medium text-zinc-700 hover:text-zinc-900 disabled:opacity-50">
+          {update.isPending ? "Saving…" : "Save"}
+        </button>
+        <button onClick={onEditEnd} className="text-xs text-zinc-500 hover:text-foreground">Cancel</button>
+      </td>
+    </tr>
   );
 }
 
@@ -413,34 +576,7 @@ function SalonDetailPage() {
         </div>
 
         <div className="space-y-8">
-          <div>
-            <h2 className="mb-3 font-semibold text-zinc-700 dark:text-zinc-300">Scoring Criteria</h2>
-            {salon.criteria.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No criteria (snapshotted from template at creation).</p>
-            ) : (
-              <div className="overflow-hidden rounded-lg border border-border">
-                <table className="w-full text-sm">
-                  <thead className="bg-zinc-50 dark:bg-zinc-800/50">
-                    <tr>
-                      <th className="px-4 py-2 text-left font-medium text-zinc-500">Name</th>
-                      <th className="px-4 py-2 text-left font-medium text-zinc-500">Range</th>
-                      <th className="px-4 py-2 text-left font-medium text-zinc-500">Weight</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                    {salon.criteria.map((c) => (
-                      <tr key={c.id}>
-                        <td className="px-4 py-2 font-medium">{c.name}</td>
-                        <td className="px-4 py-2 text-zinc-500">{c.minScore}–{c.maxScore}</td>
-                        <td className="px-4 py-2 text-zinc-500">{c.weight}×</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
+          <CriteriaTable salon={salon} />
           <CategoriesTable salon={salon} />
         </div>
       </div>
