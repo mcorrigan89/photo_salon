@@ -134,23 +134,13 @@ export class SubmissionService {
     const category = salon.categories.find((c) => c.id === categoryId);
     if (!category) throw new ORPCError("NOT_FOUND", { message: "Category not found." });
 
-    // Check salon-level limit
-    const salonCount = await this.repo.countByMemberAndSalon(ctx, memberId, salonId);
-    if (salonCount >= salon.maxSubmissionsPerMember) {
+    // Per-category limit: use category override or fall back to salon default
+    const maxPerCategory = category.maxSubmissionsPerMember ?? salon.maxSubmissionsPerMember;
+    const categoryCount = await this.repo.countByMemberAndCategory(ctx, memberId, categoryId);
+    if (categoryCount >= maxPerCategory) {
       throw new ORPCError("BAD_REQUEST", {
-        message: `You have reached the maximum of ${salon.maxSubmissionsPerMember} submissions for this salon.`,
+        message: `You have reached the maximum of ${maxPerCategory} submissions for this category.`,
       });
-    }
-
-    // Check category-level limit (if set)
-    const categoryMax = category.maxSubmissionsPerMember;
-    if (categoryMax !== null) {
-      const categoryCount = await this.repo.countByMemberAndCategory(ctx, memberId, categoryId);
-      if (categoryCount >= categoryMax) {
-        throw new ORPCError("BAD_REQUEST", {
-          message: `You have reached the maximum of ${categoryMax} submissions for this category.`,
-        });
-      }
     }
   }
 }
