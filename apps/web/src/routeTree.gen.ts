@@ -15,6 +15,7 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding_.success'
+import { Route as DashboardSubmissionsRouteImport } from './routes/dashboard/submissions'
 import { Route as DashboardMembersRouteImport } from './routes/dashboard/members'
 import { Route as DashboardAdminRouteImport } from './routes/dashboard/admin'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
@@ -52,6 +53,11 @@ const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
   id: '/onboarding_/success',
   path: '/onboarding/success',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardSubmissionsRoute = DashboardSubmissionsRouteImport.update({
+  id: '/submissions',
+  path: '/submissions',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardMembersRoute = DashboardMembersRouteImport.update({
   id: '/members',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/members': typeof DashboardMembersRoute
+  '/dashboard/submissions': typeof DashboardSubmissionsRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/members': typeof DashboardMembersRoute
+  '/dashboard/submissions': typeof DashboardSubmissionsRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/members': typeof DashboardMembersRoute
+  '/dashboard/submissions': typeof DashboardSubmissionsRoute
   '/onboarding_/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/dashboard/admin'
     | '/dashboard/members'
+    | '/dashboard/submissions'
     | '/onboarding/success'
     | '/dashboard/'
     | '/dashboard/salons/$salonId'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/dashboard/admin'
     | '/dashboard/members'
+    | '/dashboard/submissions'
     | '/onboarding/success'
     | '/dashboard'
     | '/dashboard/salons/$salonId'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/dashboard/admin'
     | '/dashboard/members'
+    | '/dashboard/submissions'
     | '/onboarding_/success'
     | '/dashboard/'
     | '/dashboard/salons/$salonId'
@@ -235,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/submissions': {
+      id: '/dashboard/submissions'
+      path: '/submissions'
+      fullPath: '/dashboard/submissions'
+      preLoaderRoute: typeof DashboardSubmissionsRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/members': {
       id: '/dashboard/members'
       path: '/members'
@@ -290,6 +309,7 @@ declare module '@tanstack/react-router' {
 interface DashboardRouteRouteChildren {
   DashboardAdminRoute: typeof DashboardAdminRoute
   DashboardMembersRoute: typeof DashboardMembersRoute
+  DashboardSubmissionsRoute: typeof DashboardSubmissionsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardSalonsSalonIdRoute: typeof DashboardSalonsSalonIdRoute
   DashboardTemplatesTemplateIdRoute: typeof DashboardTemplatesTemplateIdRoute
@@ -300,6 +320,7 @@ interface DashboardRouteRouteChildren {
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardAdminRoute: DashboardAdminRoute,
   DashboardMembersRoute: DashboardMembersRoute,
+  DashboardSubmissionsRoute: DashboardSubmissionsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardSalonsSalonIdRoute: DashboardSalonsSalonIdRoute,
   DashboardTemplatesTemplateIdRoute: DashboardTemplatesTemplateIdRoute,

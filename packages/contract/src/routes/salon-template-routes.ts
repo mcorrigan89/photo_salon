@@ -23,6 +23,7 @@ export const salonTemplateDto = z.object({
   id: z.string(),
   organizationId: z.string(),
   name: z.string(),
+  medium: z.enum(["digital", "print"]),
   maxSubmissionsPerMember: z.number(),
   slideshowRevealMode: z.enum(["score_after", "score_alongside"]),
   createdAt: z.date(),
@@ -61,6 +62,7 @@ export const updateTemplateRoute = oc
     z.object({
       templateId: z.string(),
       name: z.string().min(1).optional(),
+      medium: z.enum(["digital", "print"]).optional(),
       maxSubmissionsPerMember: z.number().int().min(1).optional(),
       slideshowRevealMode: z.enum(["score_after", "score_alongside"]).optional(),
     }),

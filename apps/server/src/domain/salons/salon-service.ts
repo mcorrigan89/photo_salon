@@ -49,6 +49,7 @@ export class SalonService {
       name: params.name,
       year: params.year,
       month: params.month,
+      medium: template.medium,
       maxSubmissionsPerMember: template.maxSubmissionsPerMember,
       slideshowRevealMode: template.slideshowRevealMode,
     });

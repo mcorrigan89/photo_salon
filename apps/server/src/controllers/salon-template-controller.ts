@@ -36,6 +36,7 @@ function toDto(entity: SalonTemplateEntity): SalonTemplateDto {
     id: entity.id,
     organizationId: entity.organizationId,
     name: entity.name,
+    medium: entity.medium,
     maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
     slideshowRevealMode: entity.slideshowRevealMode,
     createdAt: entity.createdAt,

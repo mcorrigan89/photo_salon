@@ -36,6 +36,7 @@ function TemplateSettings({ template }: { template: SalonTemplateDto }) {
   const form = useForm({
     defaultValues: {
       name: template.name,
+      medium: template.medium,
       maxSubmissionsPerMember: template.maxSubmissionsPerMember,
       slideshowRevealMode: template.slideshowRevealMode,
     },
@@ -56,6 +57,22 @@ function TemplateSettings({ template }: { template: SalonTemplateDto }) {
               onChange={(e) => field.handleChange(e.target.value)}
               required
             />
+          </div>
+        )}
+      </form.Field>
+
+      <form.Field name="medium">
+        {(field) => (
+          <div>
+            <label className="mb-1 block text-sm font-medium">Medium</label>
+            <select
+              className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value as "digital" | "print")}
+            >
+              <option value="digital">Digital</option>
+              <option value="print">Print</option>
+            </select>
           </div>
         )}
       </form.Field>

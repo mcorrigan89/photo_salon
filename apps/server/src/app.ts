@@ -13,6 +13,7 @@ import { type AuthService } from "./lib/auth.ts";
 import { createUserContext } from "./lib/context.ts";
 import { di, authSymbol, loggerSymbol } from "./lib/di.ts";
 import { handlePolarWebhook } from "./lib/polar-webhook.ts";
+import { submissionController } from "./controllers/submission-controller.ts";
 import { AppDomain } from "./domain/domain.ts";
 import { routerImplementation } from "./routes/index.ts";
 
@@ -80,6 +81,39 @@ export function createApp() {
   app.post("/api/polar/webhook", async (c) => {
     const response = await handlePolarWebhook(c.req.raw);
     return c.newResponse(response.body, response);
+  });
+
+  // Digital photo upload (multipart — can't go through oRPC)
+  app.post("/api/submissions/upload", async (c) => {
+    const auth = di.get<AuthService>(authSymbol);
+    const sessionData = await auth.api.getSession({ headers: c.req.raw.headers });
+    if (!sessionData?.user) return c.json({ error: "Unauthorized" }, 401);
+
+    const appLogger = di.get<Logger>(loggerSymbol);
+    const domain = di.get<AppDomain>(AppDomain);
+    const ctx = createUserContext(
+      { headers: c.req.raw.headers, domain, session: sessionData.session, user: sessionData.user },
+      appLogger,
+    );
+    ctx.logger.setUserContext({ ...ctx, currentUserId: sessionData.user.id });
+
+    const formData = await c.req.formData();
+    const file = formData.get("file") as File | null;
+    const salonId = formData.get("salonId") as string | null;
+    const categoryId = formData.get("categoryId") as string | null;
+    const title = formData.get("title") as string | null;
+
+    if (!file || !salonId || !categoryId || !title) {
+      return c.json({ error: "Missing required fields" }, 400);
+    }
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const result = await submissionController.submitDigital(
+      { ...ctx, currentUserId: sessionData.user.id },
+      domain,
+      { salonId, categoryId, title, file: buffer, filename: file.name, contentType: file.type },
+    );
+    return c.json(result);
   });
 
   app.on(["POST", "GET"], "/api/auth/*", (c) => {

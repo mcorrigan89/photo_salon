@@ -6,6 +6,7 @@ import { memberController } from "@/controllers/member-controller.ts";
 import { salonTemplateController } from "@/controllers/salon-template-controller.ts";
 import { onboardingController } from "@/controllers/onboarding-controller.ts";
 import { salonController } from "@/controllers/salon-controller.ts";
+import { submissionController } from "@/controllers/submission-controller.ts";
 
 const healthy = base.healthy.handler(async () => {
   const db = di.get<Database>(dbSymbol);
@@ -141,6 +142,22 @@ const removeCategory = authorizedRoute.salon.removeCategory.handler(async ({ inp
   return salonController.removeCategory(context, context.domain, input.categoryId);
 });
 
+const listMySubmissions = authorizedRoute.submission.listMine.handler(async ({ input, context }) => {
+  return submissionController.listMySubmissions(context, context.domain, input);
+});
+
+const listAllMySubmissions = authorizedRoute.submission.listAll.handler(async ({ context }) => {
+  return submissionController.listAllMySubmissions(context, context.domain);
+});
+
+const submitPrint = authorizedRoute.submission.submitPrint.handler(async ({ input, context }) => {
+  return submissionController.submitPrint(context, context.domain, input);
+});
+
+const withdrawSubmission = authorizedRoute.submission.withdraw.handler(async ({ input, context }) => {
+  return submissionController.withdraw(context, context.domain, input.submissionId);
+});
+
 export const routerImplementation = base.router({
   healthy,
   currentUser: {
@@ -170,6 +187,12 @@ export const routerImplementation = base.router({
     add: addMember,
     update: updateMember,
     remove: removeMember,
+  },
+  submission: {
+    listMine: listMySubmissions,
+    listAll: listAllMySubmissions,
+    submitPrint,
+    withdraw: withdrawSubmission,
   },
   salonTemplate: {
     list: listTemplates,

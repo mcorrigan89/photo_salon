@@ -125,6 +125,7 @@ function SalonSettings({ salon }: { salon: SalonDto }) {
   const form = useForm({
     defaultValues: {
       name: salon.name,
+      medium: salon.medium,
       judgeId: salon.judgeId ?? "",
       maxSubmissionsPerMember: salon.maxSubmissionsPerMember,
     },
@@ -132,6 +133,7 @@ function SalonSettings({ salon }: { salon: SalonDto }) {
       await update.mutateAsync({
         salonId: salon.id,
         name: value.name,
+        medium: value.medium,
         judgeId: value.judgeId || null,
         maxSubmissionsPerMember: value.maxSubmissionsPerMember,
       });
@@ -154,6 +156,23 @@ function SalonSettings({ salon }: { salon: SalonDto }) {
               disabled={!isDraft}
               required
             />
+          </div>
+        )}
+      </form.Field>
+
+      <form.Field name="medium">
+        {(field) => (
+          <div>
+            <label className="mb-1 block text-sm font-medium">Medium</label>
+            <select
+              className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value as "digital" | "print")}
+              disabled={!isDraft}
+            >
+              <option value="digital">Digital</option>
+              <option value="print">Print</option>
+            </select>
           </div>
         )}
       </form.Field>

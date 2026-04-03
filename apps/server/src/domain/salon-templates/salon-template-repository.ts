@@ -99,6 +99,7 @@ export class SalonTemplateRepository {
         id: entity.id,
         organizationId: entity.organizationId,
         name: entity.name,
+        medium: entity.medium,
         maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
         slideshowRevealMode: entity.slideshowRevealMode,
         createdAt: entity.createdAt,
@@ -108,6 +109,7 @@ export class SalonTemplateRepository {
         target: salonTemplate.id,
         set: {
           name: entity.name,
+          medium: entity.medium,
           maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
           slideshowRevealMode: entity.slideshowRevealMode,
           updatedAt: new Date(),

@@ -24,6 +24,7 @@ export class SalonEntity {
     public readonly month: number,
     public readonly status: SalonStatus,
     public readonly judgeId: string | null,
+    public readonly medium: "digital" | "print",
     public readonly maxSubmissionsPerMember: number,
     public readonly slideshowRevealMode: "score_after" | "score_alongside",
     public readonly slideshowScheduledAt: Date | null,
@@ -43,6 +44,7 @@ export class SalonEntity {
     name: string;
     year: number;
     month: number;
+    medium?: "digital" | "print";
     maxSubmissionsPerMember?: number;
     slideshowRevealMode?: "score_after" | "score_alongside";
   }): SalonEntity {
@@ -56,6 +58,7 @@ export class SalonEntity {
       params.month,
       "draft",
       null,
+      params.medium ?? "digital",
       params.maxSubmissionsPerMember ?? 3,
       params.slideshowRevealMode ?? "score_after",
       null,
@@ -82,6 +85,7 @@ export class SalonEntity {
       model.month,
       model.status,
       model.judgeId,
+      model.medium,
       model.maxSubmissionsPerMember,
       model.slideshowRevealMode,
       model.slideshowScheduledAt,
@@ -111,6 +115,7 @@ export class SalonEntity {
       this.month,
       this.status,
       params.judgeId !== undefined ? params.judgeId : this.judgeId,
+      this.medium,
       params.maxSubmissionsPerMember ?? this.maxSubmissionsPerMember,
       params.slideshowRevealMode ?? this.slideshowRevealMode,
       params.slideshowScheduledAt !== undefined ? params.slideshowScheduledAt : this.slideshowScheduledAt,
@@ -142,6 +147,7 @@ export class SalonEntity {
       this.month,
       next,
       this.judgeId,
+      this.medium,
       this.maxSubmissionsPerMember,
       this.slideshowRevealMode,
       this.slideshowScheduledAt,

@@ -71,6 +71,8 @@ export const salonTemplate = pgTable("salon_template", {
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
+  // Whether this salon accepts digital uploads or physical prints
+  medium: submissionMediumEnum("medium").default("digital").notNull(),
   // Default max submissions a member can make across the whole salon
   maxSubmissionsPerMember: smallint("max_submissions_per_member").default(3).notNull(),
   slideshowRevealMode: slideshowRevealModeEnum("slideshow_reveal_mode")
@@ -159,6 +161,7 @@ export const salon = pgTable(
     // The assigned judge for this salon
     judgeId: uuid("judge_id").references(() => user.id, { onDelete: "set null" }),
     // Copied from template, editable per-salon
+    medium: submissionMediumEnum("medium").default("digital").notNull(),
     maxSubmissionsPerMember: smallint("max_submissions_per_member").default(3).notNull(),
     slideshowRevealMode: slideshowRevealModeEnum("slideshow_reveal_mode")
       .default("score_after")
@@ -248,8 +251,6 @@ export const submission = pgTable(
     memberId: uuid("member_id")
       .notNull()
       .references(() => member.id, { onDelete: "cascade" }),
-    // Digital or print submission
-    medium: submissionMediumEnum("medium").default("digital").notNull(),
     // S3 storage key — nullable for print entries without a digital upload
     storageKey: text("storage_key"),
     originalFilename: text("original_filename"),

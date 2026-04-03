@@ -4,6 +4,7 @@ import { MemberService } from "./members/member-service.ts";
 import { OnboardingService } from "./onboarding/onboarding-service.ts";
 import { SalonService } from "./salons/salon-service.ts";
 import { SalonTemplateService } from "./salon-templates/salon-template-service.ts";
+import { SubmissionService } from "./submissions/submission-service.ts";
 import { UserService } from "./users/user-service.ts";
 
 @injectable()
@@ -14,6 +15,7 @@ export class AppDomain {
     @inject(MemberService) public memberService: MemberService,
     @inject(SalonTemplateService) public salonTemplateService: SalonTemplateService,
     @inject(SalonService) public salonService: SalonService,
+    @inject(SubmissionService) public submissionService: SubmissionService,
     @inject(OnboardingService) public onboardingService: OnboardingService,
   ) {}
 }
