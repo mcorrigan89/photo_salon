@@ -15,13 +15,14 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding_.success'
-import { Route as DashboardMembersRouteImport } from './routes/dashboard/members'
-import { Route as DashboardAdminRouteImport } from './routes/dashboard/admin'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
-import { Route as DashboardTemplatesIndexRouteImport } from './routes/dashboard/templates/index'
-import { Route as DashboardSalonsIndexRouteImport } from './routes/dashboard/salons/index'
-import { Route as DashboardTemplatesTemplateIdRouteImport } from './routes/dashboard/templates/$templateId'
-import { Route as DashboardSalonsSalonIdRouteImport } from './routes/dashboard/salons/$salonId'
+import { Route as DashboardAdminRouteRouteImport } from './routes/dashboard/admin/route'
+import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
+import { Route as DashboardAdminMembersRouteImport } from './routes/dashboard/admin/members'
+import { Route as DashboardAdminTemplatesIndexRouteImport } from './routes/dashboard/admin/templates/index'
+import { Route as DashboardAdminSalonsIndexRouteImport } from './routes/dashboard/admin/salons/index'
+import { Route as DashboardAdminTemplatesTemplateIdRouteImport } from './routes/dashboard/admin/templates/$templateId'
+import { Route as DashboardAdminSalonsSalonIdRouteImport } from './routes/dashboard/admin/salons/$salonId'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -53,71 +54,80 @@ const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
   path: '/onboarding/success',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardMembersRoute = DashboardMembersRouteImport.update({
-  id: '/members',
-  path: '/members',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardAdminRoute = DashboardAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
-  id: '/templates/',
-  path: '/templates/',
+const DashboardAdminRouteRoute = DashboardAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardSalonsIndexRoute = DashboardSalonsIndexRouteImport.update({
-  id: '/salons/',
-  path: '/salons/',
-  getParentRoute: () => DashboardRouteRoute,
+const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardAdminRouteRoute,
 } as any)
-const DashboardTemplatesTemplateIdRoute =
-  DashboardTemplatesTemplateIdRouteImport.update({
+const DashboardAdminMembersRoute = DashboardAdminMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => DashboardAdminRouteRoute,
+} as any)
+const DashboardAdminTemplatesIndexRoute =
+  DashboardAdminTemplatesIndexRouteImport.update({
+    id: '/templates/',
+    path: '/templates/',
+    getParentRoute: () => DashboardAdminRouteRoute,
+  } as any)
+const DashboardAdminSalonsIndexRoute =
+  DashboardAdminSalonsIndexRouteImport.update({
+    id: '/salons/',
+    path: '/salons/',
+    getParentRoute: () => DashboardAdminRouteRoute,
+  } as any)
+const DashboardAdminTemplatesTemplateIdRoute =
+  DashboardAdminTemplatesTemplateIdRouteImport.update({
     id: '/templates/$templateId',
     path: '/templates/$templateId',
-    getParentRoute: () => DashboardRouteRoute,
+    getParentRoute: () => DashboardAdminRouteRoute,
   } as any)
-const DashboardSalonsSalonIdRoute = DashboardSalonsSalonIdRouteImport.update({
-  id: '/salons/$salonId',
-  path: '/salons/$salonId',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
+const DashboardAdminSalonsSalonIdRoute =
+  DashboardAdminSalonsSalonIdRouteImport.update({
+    id: '/salons/$salonId',
+    path: '/salons/$salonId',
+    getParentRoute: () => DashboardAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/dashboard/admin': typeof DashboardAdminRouteRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
-  '/dashboard/admin': typeof DashboardAdminRoute
-  '/dashboard/members': typeof DashboardMembersRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
-  '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
-  '/dashboard/salons/': typeof DashboardSalonsIndexRoute
-  '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
+  '/dashboard/admin/members': typeof DashboardAdminMembersRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
+  '/dashboard/admin/salons/$salonId': typeof DashboardAdminSalonsSalonIdRoute
+  '/dashboard/admin/templates/$templateId': typeof DashboardAdminTemplatesTemplateIdRoute
+  '/dashboard/admin/salons/': typeof DashboardAdminSalonsIndexRoute
+  '/dashboard/admin/templates/': typeof DashboardAdminTemplatesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/dashboard/admin': typeof DashboardAdminRoute
-  '/dashboard/members': typeof DashboardMembersRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard': typeof DashboardIndexRoute
-  '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
-  '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
-  '/dashboard/salons': typeof DashboardSalonsIndexRoute
-  '/dashboard/templates': typeof DashboardTemplatesIndexRoute
+  '/dashboard/admin/members': typeof DashboardAdminMembersRoute
+  '/dashboard/admin': typeof DashboardAdminIndexRoute
+  '/dashboard/admin/salons/$salonId': typeof DashboardAdminSalonsSalonIdRoute
+  '/dashboard/admin/templates/$templateId': typeof DashboardAdminTemplatesTemplateIdRoute
+  '/dashboard/admin/salons': typeof DashboardAdminSalonsIndexRoute
+  '/dashboard/admin/templates': typeof DashboardAdminTemplatesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,15 +135,16 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/dashboard/admin': typeof DashboardAdminRouteRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
-  '/dashboard/admin': typeof DashboardAdminRoute
-  '/dashboard/members': typeof DashboardMembersRoute
   '/onboarding_/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/salons/$salonId': typeof DashboardSalonsSalonIdRoute
-  '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
-  '/dashboard/salons/': typeof DashboardSalonsIndexRoute
-  '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
+  '/dashboard/admin/members': typeof DashboardAdminMembersRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
+  '/dashboard/admin/salons/$salonId': typeof DashboardAdminSalonsSalonIdRoute
+  '/dashboard/admin/templates/$templateId': typeof DashboardAdminTemplatesTemplateIdRoute
+  '/dashboard/admin/salons/': typeof DashboardAdminSalonsIndexRoute
+  '/dashboard/admin/templates/': typeof DashboardAdminTemplatesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -142,44 +153,46 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/onboarding'
-    | '/auth/callback'
     | '/dashboard/admin'
-    | '/dashboard/members'
+    | '/auth/callback'
     | '/onboarding/success'
     | '/dashboard/'
-    | '/dashboard/salons/$salonId'
-    | '/dashboard/templates/$templateId'
-    | '/dashboard/salons/'
-    | '/dashboard/templates/'
+    | '/dashboard/admin/members'
+    | '/dashboard/admin/'
+    | '/dashboard/admin/salons/$salonId'
+    | '/dashboard/admin/templates/$templateId'
+    | '/dashboard/admin/salons/'
+    | '/dashboard/admin/templates/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/onboarding'
     | '/auth/callback'
-    | '/dashboard/admin'
-    | '/dashboard/members'
     | '/onboarding/success'
     | '/dashboard'
-    | '/dashboard/salons/$salonId'
-    | '/dashboard/templates/$templateId'
-    | '/dashboard/salons'
-    | '/dashboard/templates'
+    | '/dashboard/admin/members'
+    | '/dashboard/admin'
+    | '/dashboard/admin/salons/$salonId'
+    | '/dashboard/admin/templates/$templateId'
+    | '/dashboard/admin/salons'
+    | '/dashboard/admin/templates'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/login'
     | '/onboarding'
-    | '/auth/callback'
     | '/dashboard/admin'
-    | '/dashboard/members'
+    | '/auth/callback'
     | '/onboarding_/success'
     | '/dashboard/'
-    | '/dashboard/salons/$salonId'
-    | '/dashboard/templates/$templateId'
-    | '/dashboard/salons/'
-    | '/dashboard/templates/'
+    | '/dashboard/admin/members'
+    | '/dashboard/admin/'
+    | '/dashboard/admin/salons/$salonId'
+    | '/dashboard/admin/templates/$templateId'
+    | '/dashboard/admin/salons/'
+    | '/dashboard/admin/templates/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -235,20 +248,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/members': {
-      id: '/dashboard/members'
-      path: '/members'
-      fullPath: '/dashboard/members'
-      preLoaderRoute: typeof DashboardMembersRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/admin': {
-      id: '/dashboard/admin'
-      path: '/admin'
-      fullPath: '/dashboard/admin'
-      preLoaderRoute: typeof DashboardAdminRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
@@ -256,55 +255,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/templates/': {
-      id: '/dashboard/templates/'
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/admin/': {
+      id: '/dashboard/admin/'
+      path: '/'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
+    }
+    '/dashboard/admin/members': {
+      id: '/dashboard/admin/members'
+      path: '/members'
+      fullPath: '/dashboard/admin/members'
+      preLoaderRoute: typeof DashboardAdminMembersRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
+    }
+    '/dashboard/admin/templates/': {
+      id: '/dashboard/admin/templates/'
       path: '/templates'
-      fullPath: '/dashboard/templates/'
-      preLoaderRoute: typeof DashboardTemplatesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/admin/templates/'
+      preLoaderRoute: typeof DashboardAdminTemplatesIndexRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
     }
-    '/dashboard/salons/': {
-      id: '/dashboard/salons/'
+    '/dashboard/admin/salons/': {
+      id: '/dashboard/admin/salons/'
       path: '/salons'
-      fullPath: '/dashboard/salons/'
-      preLoaderRoute: typeof DashboardSalonsIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/admin/salons/'
+      preLoaderRoute: typeof DashboardAdminSalonsIndexRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
     }
-    '/dashboard/templates/$templateId': {
-      id: '/dashboard/templates/$templateId'
+    '/dashboard/admin/templates/$templateId': {
+      id: '/dashboard/admin/templates/$templateId'
       path: '/templates/$templateId'
-      fullPath: '/dashboard/templates/$templateId'
-      preLoaderRoute: typeof DashboardTemplatesTemplateIdRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/admin/templates/$templateId'
+      preLoaderRoute: typeof DashboardAdminTemplatesTemplateIdRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
     }
-    '/dashboard/salons/$salonId': {
-      id: '/dashboard/salons/$salonId'
+    '/dashboard/admin/salons/$salonId': {
+      id: '/dashboard/admin/salons/$salonId'
       path: '/salons/$salonId'
-      fullPath: '/dashboard/salons/$salonId'
-      preLoaderRoute: typeof DashboardSalonsSalonIdRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/admin/salons/$salonId'
+      preLoaderRoute: typeof DashboardAdminSalonsSalonIdRouteImport
+      parentRoute: typeof DashboardAdminRouteRoute
     }
   }
 }
 
+interface DashboardAdminRouteRouteChildren {
+  DashboardAdminMembersRoute: typeof DashboardAdminMembersRoute
+  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
+  DashboardAdminSalonsSalonIdRoute: typeof DashboardAdminSalonsSalonIdRoute
+  DashboardAdminTemplatesTemplateIdRoute: typeof DashboardAdminTemplatesTemplateIdRoute
+  DashboardAdminSalonsIndexRoute: typeof DashboardAdminSalonsIndexRoute
+  DashboardAdminTemplatesIndexRoute: typeof DashboardAdminTemplatesIndexRoute
+}
+
+const DashboardAdminRouteRouteChildren: DashboardAdminRouteRouteChildren = {
+  DashboardAdminMembersRoute: DashboardAdminMembersRoute,
+  DashboardAdminIndexRoute: DashboardAdminIndexRoute,
+  DashboardAdminSalonsSalonIdRoute: DashboardAdminSalonsSalonIdRoute,
+  DashboardAdminTemplatesTemplateIdRoute:
+    DashboardAdminTemplatesTemplateIdRoute,
+  DashboardAdminSalonsIndexRoute: DashboardAdminSalonsIndexRoute,
+  DashboardAdminTemplatesIndexRoute: DashboardAdminTemplatesIndexRoute,
+}
+
+const DashboardAdminRouteRouteWithChildren =
+  DashboardAdminRouteRoute._addFileChildren(DashboardAdminRouteRouteChildren)
+
 interface DashboardRouteRouteChildren {
-  DashboardAdminRoute: typeof DashboardAdminRoute
-  DashboardMembersRoute: typeof DashboardMembersRoute
+  DashboardAdminRouteRoute: typeof DashboardAdminRouteRouteWithChildren
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardSalonsSalonIdRoute: typeof DashboardSalonsSalonIdRoute
-  DashboardTemplatesTemplateIdRoute: typeof DashboardTemplatesTemplateIdRoute
-  DashboardSalonsIndexRoute: typeof DashboardSalonsIndexRoute
-  DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
-  DashboardAdminRoute: DashboardAdminRoute,
-  DashboardMembersRoute: DashboardMembersRoute,
+  DashboardAdminRouteRoute: DashboardAdminRouteRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardSalonsSalonIdRoute: DashboardSalonsSalonIdRoute,
-  DashboardTemplatesTemplateIdRoute: DashboardTemplatesTemplateIdRoute,
-  DashboardSalonsIndexRoute: DashboardSalonsIndexRoute,
-  DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
