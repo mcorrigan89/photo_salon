@@ -112,6 +112,7 @@ function ScoringView({
 
   const [values, setValues] = useState(initialValues);
   const [comment, setComment] = useState(submission.score?.comment ?? "");
+  const [fullscreen, setFullscreen] = useState(false);
 
   // Reset state when submission changes
   const [currentSubId, setCurrentSubId] = useState(submission.submissionId);
@@ -191,11 +192,21 @@ function ScoringView({
       {/* Photo */}
       <div className="mb-6">
         {submission.imageUrl ? (
-          <img
-            src={submission.imageUrl}
-            alt={submission.title ?? ""}
-            className="max-h-[500px] w-full rounded-lg object-contain bg-black"
-          />
+          <div className="relative group">
+            <img
+              src={submission.imageUrl}
+              alt={submission.title ?? ""}
+              className="max-h-[500px] w-full rounded-lg object-contain bg-black cursor-pointer"
+              onClick={() => setFullscreen(true)}
+            />
+            <button
+              onClick={() => setFullscreen(true)}
+              className="absolute top-2 right-2 rounded bg-black/50 p-1.5 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="View fullscreen"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            </button>
+          </div>
         ) : (
           <div className="flex h-64 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 dark:bg-zinc-800">
             No image — print entry
@@ -259,6 +270,28 @@ function ScoringView({
           Save & Next
         </button>
       </div>
+
+      {/* Fullscreen lightbox */}
+      {fullscreen && submission.imageUrl && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 cursor-pointer"
+          onClick={() => setFullscreen(false)}
+        >
+          <button
+            onClick={() => setFullscreen(false)}
+            className="absolute top-4 right-4 rounded bg-white/10 p-2 text-white hover:bg-white/20"
+            aria-label="Close fullscreen"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <img
+            src={submission.imageUrl}
+            alt={submission.title ?? ""}
+            className="max-h-[95vh] max-w-[95vw] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
