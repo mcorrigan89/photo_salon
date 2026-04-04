@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "no-debugger": "error",
+    "no-console": "warn",
+    "eqeqeq": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "typescript/no-explicit-any": "warn"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.output/**",
+    "**/routeTree.gen.ts"
+  ]
+}
