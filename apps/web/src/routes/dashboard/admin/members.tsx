@@ -323,7 +323,7 @@ function MembersPage() {
   const [modal, setModal] = useState<Modal | null>(null);
 
   return (
-    <div className="p-8">
+    <div className="p-8 max-w-3xl mx-auto">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Members</h1>
         <button

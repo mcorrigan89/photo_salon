@@ -85,7 +85,7 @@ function TemplatesPage() {
   });
 
   return (
-    <div className="p-8">
+    <div className="p-8 max-w-3xl mx-auto">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Salon Templates</h1>
         <button

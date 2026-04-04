@@ -197,7 +197,7 @@ function SalonsPage() {
   const [showCreate, setShowCreate] = useState(false);
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-8 max-w-2xl mx-auto">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Salons</h1>
         <button
