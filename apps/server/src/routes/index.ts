@@ -158,6 +158,10 @@ const withdrawSubmission = authorizedRoute.submission.withdraw.handler(async ({ 
   return submissionController.withdraw(context, context.domain, input.submissionId);
 });
 
+const salonSubmissionSummary = authorizedRoute.submission.salonSummary.handler(async ({ input, context }) => {
+  return submissionController.salonSummary(context, context.domain, input);
+});
+
 export const routerImplementation = base.router({
   healthy,
   currentUser: {
@@ -193,6 +197,7 @@ export const routerImplementation = base.router({
     listAll: listAllMySubmissions,
     submitPrint,
     withdraw: withdrawSubmission,
+    salonSummary: salonSubmissionSummary,
   },
   salonTemplate: {
     list: listTemplates,

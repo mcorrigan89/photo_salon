@@ -56,6 +56,28 @@ export class SubmissionRepository {
     return rows.map(SubmissionEntity.fromModel);
   }
 
+  async hasSubmissionsForCategory(_ctx: UserContext, categoryId: string): Promise<boolean> {
+    const row = await this.db.query.submission.findFirst({
+      where: eq(submission.salonCategoryId, categoryId),
+    });
+    return row !== undefined;
+  }
+
+  async hasSubmissionsForSalon(_ctx: UserContext, salonId: string): Promise<boolean> {
+    const categories = await this.db
+      .select({ id: salonCategory.id })
+      .from(salonCategory)
+      .where(eq(salonCategory.salonId, salonId));
+
+    if (categories.length === 0) return false;
+
+    const categoryIds = categories.map((c) => c.id);
+    const row = await this.db.query.submission.findFirst({
+      where: inArray(submission.salonCategoryId, categoryIds),
+    });
+    return row !== undefined;
+  }
+
   async countByMemberAndCategory(
     _ctx: UserContext,
     memberId: string,

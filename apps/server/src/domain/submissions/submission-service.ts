@@ -111,6 +111,29 @@ export class SubmissionService {
     return updated;
   }
 
+  async getSalonSubmissionSummary(
+    ctx: UserContext,
+    salonId: string,
+  ): Promise<Array<{ memberId: string; categoryId: string; count: number }>> {
+    ctx.logger.trace("Getting salon submission summary", salonId);
+    const salon = await this.salonRepo.findById(ctx, salonId);
+    if (!salon) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
+
+    const results: Array<{ memberId: string; categoryId: string; count: number }> = [];
+    for (const category of salon.categories) {
+      const submissions = await this.repo.listByCategory(ctx, category.id);
+      const activeByMember = new Map<string, number>();
+      for (const sub of submissions) {
+        if (sub.status === "withdrawn") continue;
+        activeByMember.set(sub.memberId, (activeByMember.get(sub.memberId) ?? 0) + 1);
+      }
+      for (const [memberId, count] of activeByMember) {
+        results.push({ memberId, categoryId: category.id, count });
+      }
+    }
+    return results;
+  }
+
   async getSignedUrl(ctx: UserContext, submissionId: string): Promise<string | null> {
     const sub = await this.repo.findById(ctx, submissionId);
     if (!sub || !sub.storageKey) return null;

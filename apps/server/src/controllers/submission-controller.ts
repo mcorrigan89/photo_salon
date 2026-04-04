@@ -1,7 +1,7 @@
 import { ORPCError } from "@orpc/server";
 import { type UserContext } from "@/lib/context.ts";
 import { type AppDomain } from "@/domain/domain.ts";
-import { type SubmissionDto } from "@photo-salon/contract";
+import { type SubmissionDto, type SalonSubmissionSummaryDto } from "@photo-salon/contract";
 import { type SubmissionEntity } from "@/domain/submissions/submission-entity.ts";
 import { getSignedViewUrl } from "@/lib/storage.ts";
 
@@ -102,6 +102,31 @@ export class SubmissionController {
       memberId,
     });
     return toDto(submission);
+  }
+
+  async salonSummary(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { salonId: string },
+  ): Promise<SalonSubmissionSummaryDto[]> {
+    const salon = await domain.salonService.getSalon(ctx, input.salonId);
+    const summary = await domain.submissionService.getSalonSubmissionSummary(ctx, input.salonId);
+    const members = await domain.memberService.listMembers(ctx, salon.organizationId);
+
+    const memberMap = new Map(members.map((m) => [m.id, m]));
+    const categoryMap = new Map(salon.categories.map((c) => [c.id, c.name]));
+
+    return summary.map((s) => {
+      const member = memberMap.get(s.memberId);
+      return {
+        memberId: s.memberId,
+        memberName: member?.user.name ?? "Unknown",
+        memberNumber: member?.memberNumber ?? null,
+        categoryId: s.categoryId,
+        categoryName: categoryMap.get(s.categoryId) ?? "Unknown",
+        count: s.count,
+      };
+    });
   }
 
   async withdraw(
