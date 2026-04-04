@@ -78,6 +78,8 @@ export const salonTemplate = pgTable("salon_template", {
   slideshowRevealMode: slideshowRevealModeEnum("slideshow_reveal_mode")
     .default("score_after")
     .notNull(),
+  // Minimum total score to show score/comment in the slideshow (null = show all)
+  awardThreshold: decimal("award_threshold", { precision: 8, scale: 2 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -166,6 +168,7 @@ export const salon = pgTable(
     slideshowRevealMode: slideshowRevealModeEnum("slideshow_reveal_mode")
       .default("score_after")
       .notNull(),
+    awardThreshold: decimal("award_threshold", { precision: 8, scale: 2 }),
     // When the slideshow should auto-start (null = manual trigger only)
     slideshowScheduledAt: timestamp("slideshow_scheduled_at"),
     // When the slideshow actually started

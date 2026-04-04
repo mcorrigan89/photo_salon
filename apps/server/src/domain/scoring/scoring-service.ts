@@ -23,6 +23,12 @@ export class ScoringService {
     @inject(SubmissionRepository) private submissionRepo: SubmissionRepository,
   ) {}
 
+  async getScoresForSalon(ctx: UserContext, salonId: string) {
+    ctx.logger.trace("Loading all scores for salon", salonId);
+    const scores = await this.scoreRepo.listBySalonId(ctx, salonId);
+    return scores;
+  }
+
   async getJudgingSubmissions(
     ctx: UserContext,
     salonId: string,

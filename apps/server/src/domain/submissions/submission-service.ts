@@ -31,6 +31,10 @@ export class SubmissionService {
     return this.repo.listByMember(ctx, memberId);
   }
 
+  async listByCategory(ctx: UserContext, categoryId: string): Promise<SubmissionEntity[]> {
+    return this.repo.listByCategory(ctx, categoryId);
+  }
+
   async submitDigital(
     ctx: UserContext,
     params: {

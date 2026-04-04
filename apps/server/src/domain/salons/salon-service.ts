@@ -54,6 +54,7 @@ export class SalonService {
       medium: template.medium,
       maxSubmissionsPerMember: template.maxSubmissionsPerMember,
       slideshowRevealMode: template.slideshowRevealMode,
+      awardThreshold: template.awardThreshold,
     });
 
     const saved = await this.repo.save(ctx, salonEntity);

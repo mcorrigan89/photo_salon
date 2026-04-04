@@ -13,6 +13,7 @@ export class SalonTemplateEntity {
     public readonly medium: "digital" | "print",
     public readonly maxSubmissionsPerMember: number,
     public readonly slideshowRevealMode: "score_after" | "score_alongside",
+    public readonly awardThreshold: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     /** Ordered by displayOrder ascending. */
@@ -27,6 +28,7 @@ export class SalonTemplateEntity {
     medium?: "digital" | "print";
     maxSubmissionsPerMember?: number;
     slideshowRevealMode?: "score_after" | "score_alongside";
+    awardThreshold?: string | null;
   }): SalonTemplateEntity {
     const now = new Date();
     return new SalonTemplateEntity(
@@ -36,6 +38,7 @@ export class SalonTemplateEntity {
       params.medium ?? "digital",
       params.maxSubmissionsPerMember ?? 3,
       params.slideshowRevealMode ?? "score_after",
+      params.awardThreshold ?? null,
       now,
       now,
       [],
@@ -55,6 +58,7 @@ export class SalonTemplateEntity {
       template.medium,
       template.maxSubmissionsPerMember,
       template.slideshowRevealMode,
+      template.awardThreshold,
       template.createdAt,
       template.updatedAt,
       criteria.map(TemplateScoringCriterionEntity.fromModel),
@@ -67,6 +71,7 @@ export class SalonTemplateEntity {
     medium?: "digital" | "print";
     maxSubmissionsPerMember?: number;
     slideshowRevealMode?: "score_after" | "score_alongside";
+    awardThreshold?: string | null;
   }): SalonTemplateEntity {
     return new SalonTemplateEntity(
       this.id,
@@ -75,6 +80,7 @@ export class SalonTemplateEntity {
       params.medium ?? this.medium,
       params.maxSubmissionsPerMember ?? this.maxSubmissionsPerMember,
       params.slideshowRevealMode ?? this.slideshowRevealMode,
+      params.awardThreshold !== undefined ? params.awardThreshold : this.awardThreshold,
       this.createdAt,
       new Date(),
       this.criteria,

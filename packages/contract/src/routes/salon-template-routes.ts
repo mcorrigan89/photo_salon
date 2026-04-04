@@ -26,6 +26,7 @@ export const salonTemplateDto = z.object({
   medium: z.enum(["digital", "print"]),
   maxSubmissionsPerMember: z.number(),
   slideshowRevealMode: z.enum(["score_after", "score_alongside"]),
+  awardThreshold: z.string().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
   criteria: z.array(templateCriterionDto),

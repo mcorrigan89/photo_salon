@@ -39,6 +39,7 @@ function toDto(entity: SalonTemplateEntity): SalonTemplateDto {
     medium: entity.medium,
     maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
     slideshowRevealMode: entity.slideshowRevealMode,
+    awardThreshold: entity.awardThreshold,
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
     criteria: entity.criteria.map(criterionToDto),

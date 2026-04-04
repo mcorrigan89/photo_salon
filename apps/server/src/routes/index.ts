@@ -8,6 +8,7 @@ import { onboardingController } from "@/controllers/onboarding-controller.ts";
 import { salonController } from "@/controllers/salon-controller.ts";
 import { submissionController } from "@/controllers/submission-controller.ts";
 import { judgingController } from "@/controllers/judging-controller.ts";
+import { slideshowController } from "@/controllers/slideshow-controller.ts";
 
 const healthy = base.healthy.handler(async () => {
   const db = di.get<Database>(dbSymbol);
@@ -163,6 +164,10 @@ const salonSubmissionSummary = authorizedRoute.submission.salonSummary.handler(a
   return submissionController.salonSummary(context, context.domain, input);
 });
 
+const slideshowData = authorizedRoute.slideshow.get.handler(async ({ input, context }) => {
+  return slideshowController.getSlideshow(context, context.domain, input);
+});
+
 const judgingSubmissions = authorizedRoute.judging.submissions.handler(async ({ input, context }) => {
   return judgingController.getSubmissions(context, context.domain, input);
 });
@@ -194,6 +199,9 @@ export const routerImplementation = base.router({
     addCategory,
     updateCategory,
     removeCategory,
+  },
+  slideshow: {
+    get: slideshowData,
   },
   judging: {
     submissions: judgingSubmissions,

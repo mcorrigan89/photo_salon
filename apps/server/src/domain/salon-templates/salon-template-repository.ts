@@ -102,6 +102,7 @@ export class SalonTemplateRepository {
         medium: entity.medium,
         maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
         slideshowRevealMode: entity.slideshowRevealMode,
+        awardThreshold: entity.awardThreshold,
         createdAt: entity.createdAt,
         updatedAt: new Date(),
       })
@@ -112,6 +113,7 @@ export class SalonTemplateRepository {
           medium: entity.medium,
           maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
           slideshowRevealMode: entity.slideshowRevealMode,
+          awardThreshold: entity.awardThreshold,
           updatedAt: new Date(),
         },
       });
