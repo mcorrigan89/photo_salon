@@ -65,7 +65,7 @@ export function createApp() {
   const app = new Hono();
 
   app.use(
-    "/api/auth/*",
+    "/api/*",
     cors({
       origin: [env.CLIENT_URL, env.SERVER_URL],
       allowHeaders: ["Content-Type", "Authorization"],
