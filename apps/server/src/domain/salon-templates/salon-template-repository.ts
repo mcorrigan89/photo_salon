@@ -65,6 +65,31 @@ export class SalonTemplateRepository {
     );
   }
 
+  async findByCriterionId(
+    _ctx: UserContext,
+    criterionId: string,
+  ): Promise<SalonTemplateEntity | null> {
+    const rows = await this.db
+      .select({ templateId: templateScoringCriterion.templateId })
+      .from(templateScoringCriterion)
+      .where(eq(templateScoringCriterion.id, criterionId))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return this.loadAggregate(rows[0].templateId);
+  }
+
+  async findBySlotId(_ctx: UserContext, slotId: string): Promise<SalonTemplateEntity | null> {
+    const rows = await this.db
+      .select({ templateId: templateCategorySlot.templateId })
+      .from(templateCategorySlot)
+      .where(eq(templateCategorySlot.id, slotId))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return this.loadAggregate(rows[0].templateId);
+  }
+
   // ── Template save / delete ─────────────────────────────────────────────────
 
   async save(_ctx: UserContext, entity: SalonTemplateEntity): Promise<SalonTemplateEntity> {
