@@ -15,6 +15,7 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding_.success'
+import { Route as DashboardHistoryRouteImport } from './routes/dashboard/history'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as DashboardAdminRouteRouteImport } from './routes/dashboard/admin/route'
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
@@ -53,6 +54,11 @@ const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
   id: '/onboarding_/success',
   path: '/onboarding/success',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardHistoryRoute = DashboardHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/dashboard/admin': typeof DashboardAdminRouteRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/history': typeof DashboardHistoryRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/history': typeof DashboardHistoryRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/dashboard/admin': typeof DashboardAdminRouteRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/history': typeof DashboardHistoryRoute
   '/onboarding_/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/dashboard/admin'
     | '/auth/callback'
+    | '/dashboard/history'
     | '/onboarding/success'
     | '/dashboard/'
     | '/dashboard/admin/members'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/auth/callback'
+    | '/dashboard/history'
     | '/onboarding/success'
     | '/dashboard'
     | '/dashboard/admin/members'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/dashboard/admin'
     | '/auth/callback'
+    | '/dashboard/history'
     | '/onboarding_/success'
     | '/dashboard/'
     | '/dashboard/admin/members'
@@ -247,6 +259,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/onboarding/success'
       preLoaderRoute: typeof OnboardingSuccessRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/history': {
+      id: '/dashboard/history'
+      path: '/history'
+      fullPath: '/dashboard/history'
+      preLoaderRoute: typeof DashboardHistoryRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/auth/callback': {
       id: '/auth/callback'
@@ -331,11 +350,13 @@ const DashboardAdminRouteRouteWithChildren =
 
 interface DashboardRouteRouteChildren {
   DashboardAdminRouteRoute: typeof DashboardAdminRouteRouteWithChildren
+  DashboardHistoryRoute: typeof DashboardHistoryRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardAdminRouteRoute: DashboardAdminRouteRouteWithChildren,
+  DashboardHistoryRoute: DashboardHistoryRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
