@@ -83,7 +83,7 @@ export const transitionSalonRoute = oc
   .input(
     z.object({
       salonId: z.string(),
-      status: z.enum(["open", "judging", "complete"]),
+      status: z.enum(["draft", "open", "judging", "complete"]),
     }),
   )
   .output(salonDto);
@@ -91,3 +91,31 @@ export const transitionSalonRoute = oc
 export const deleteSalonRoute = oc
   .input(z.object({ salonId: z.string() }))
   .output(z.object({ success: z.boolean() }));
+
+// ── Category routes ───────────────────────────────────────────────────────────
+
+export const addCategoryRoute = oc
+  .input(
+    z.object({
+      salonId: z.string(),
+      name: z.string().min(1),
+      maxSubmissionsPerMember: z.number().int().nullable().optional(),
+      displayOrder: z.number().int().optional(),
+    }),
+  )
+  .output(salonDto);
+
+export const updateCategoryRoute = oc
+  .input(
+    z.object({
+      categoryId: z.string(),
+      name: z.string().min(1).optional(),
+      maxSubmissionsPerMember: z.number().int().nullable().optional(),
+      displayOrder: z.number().int().optional(),
+    }),
+  )
+  .output(salonDto);
+
+export const removeCategoryRoute = oc
+  .input(z.object({ categoryId: z.string() }))
+  .output(salonDto);

@@ -117,6 +117,18 @@ const deleteSalon = authorizedRoute.salon.delete.handler(async ({ input, context
   return salonController.deleteSalon(context, context.domain, input.salonId);
 });
 
+const addCategory = authorizedRoute.salon.addCategory.handler(async ({ input, context }) => {
+  return salonController.addCategory(context, context.domain, input);
+});
+
+const updateCategory = authorizedRoute.salon.updateCategory.handler(async ({ input, context }) => {
+  return salonController.updateCategory(context, context.domain, input);
+});
+
+const removeCategory = authorizedRoute.salon.removeCategory.handler(async ({ input, context }) => {
+  return salonController.removeCategory(context, context.domain, input.categoryId);
+});
+
 export const routerImplementation = base.router({
   healthy,
   currentUser: {
@@ -134,6 +146,9 @@ export const routerImplementation = base.router({
     update: updateSalon,
     transition: transitionSalon,
     delete: deleteSalon,
+    addCategory,
+    updateCategory,
+    removeCategory,
   },
   member: {
     list: listMembers,

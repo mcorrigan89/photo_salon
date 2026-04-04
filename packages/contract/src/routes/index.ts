@@ -36,6 +36,9 @@ import {
   updateSalonRoute,
   transitionSalonRoute,
   deleteSalonRoute,
+  addCategoryRoute,
+  updateCategoryRoute,
+  removeCategoryRoute,
 } from "./salon-routes.ts";
 
 const healthy = oc.output(z.string());
@@ -63,6 +66,9 @@ export const contract = {
     update: updateSalonRoute,
     transition: transitionSalonRoute,
     delete: deleteSalonRoute,
+    addCategory: addCategoryRoute,
+    updateCategory: updateCategoryRoute,
+    removeCategory: removeCategoryRoute,
   },
   salonTemplate: {
     list: listTemplatesRoute,
