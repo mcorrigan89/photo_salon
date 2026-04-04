@@ -7,6 +7,10 @@ export const Route = createFileRoute("/dashboard")({
     if (!currentUser) {
       throw redirect({ to: "/login" });
     }
+    const config = await context.queryClient.fetchQuery(orpc.onboarding.config.queryOptions());
+    if (!config.hasOrganization) {
+      throw redirect({ to: "/onboarding" });
+    }
   },
   component: DashboardLayout,
 });

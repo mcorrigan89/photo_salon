@@ -12,6 +12,7 @@ import { cors } from "hono/cors";
 import { type AuthService } from "./lib/auth.ts";
 import { createUserContext } from "./lib/context.ts";
 import { di, authSymbol, loggerSymbol } from "./lib/di.ts";
+import { handlePolarWebhook } from "./lib/polar-webhook.ts";
 import { AppDomain } from "./domain/domain.ts";
 import { routerImplementation } from "./routes/index.ts";
 
@@ -75,6 +76,11 @@ export function createApp() {
   );
 
   app.get("/", (c) => c.text("Photo Salon API"));
+
+  app.post("/api/polar/webhook", async (c) => {
+    const response = await handlePolarWebhook(c.req.raw);
+    return c.newResponse(response.body, response);
+  });
 
   app.on(["POST", "GET"], "/api/auth/*", (c) => {
     const auth = di.get<AuthService>(authSymbol);
