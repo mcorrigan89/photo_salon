@@ -13,7 +13,7 @@ export class UserService {
     if (!ctx.currentUserId) {
       return { userEntity: null, sessionEntity: null };
     }
-    const userEntity = await this.repo.userById(ctx, ctx.currentUserId);
+    const userEntity = await this.repo.findById(ctx, ctx.currentUserId);
     return { userEntity, sessionEntity: ctx.session ?? null };
   }
 }

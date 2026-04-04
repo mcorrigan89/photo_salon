@@ -22,6 +22,17 @@ export class UserEntity {
       .slice(0, 2);
   }
 
+  static create(params: { name: string; email: string }): UserEntity {
+    return new UserEntity(
+      crypto.randomUUID(),
+      params.name,
+      params.email,
+      false,
+      null,
+      new Date(),
+    );
+  }
+
   static fromModel(model: UserModel): UserEntity {
     return new UserEntity(
       model.id,
@@ -30,6 +41,17 @@ export class UserEntity {
       model.emailVerified,
       model.role ?? null,
       model.createdAt,
+    );
+  }
+
+  with(params: { name?: string; email?: string }): UserEntity {
+    return new UserEntity(
+      this.id,
+      params.name ?? this.name,
+      params.email ?? this.email,
+      this.emailVerified,
+      this.role,
+      this.createdAt,
     );
   }
 }
