@@ -19,6 +19,7 @@ import { Route as DashboardHistoryRouteImport } from './routes/dashboard/history
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as DashboardAdminRouteRouteImport } from './routes/dashboard/admin/route'
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
+import { Route as DashboardJudgeSalonIdRouteImport } from './routes/dashboard/judge/$salonId'
 import { Route as DashboardAdminMembersRouteImport } from './routes/dashboard/admin/members'
 import { Route as DashboardAdminTemplatesIndexRouteImport } from './routes/dashboard/admin/templates/index'
 import { Route as DashboardAdminSalonsIndexRouteImport } from './routes/dashboard/admin/salons/index'
@@ -75,6 +76,11 @@ const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardAdminRouteRoute,
 } as any)
+const DashboardJudgeSalonIdRoute = DashboardJudgeSalonIdRouteImport.update({
+  id: '/judge/$salonId',
+  path: '/judge/$salonId',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardAdminMembersRoute = DashboardAdminMembersRouteImport.update({
   id: '/members',
   path: '/members',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
+  '/dashboard/judge/$salonId': typeof DashboardJudgeSalonIdRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/admin/salons/$salonId': typeof DashboardAdminSalonsSalonIdRoute
   '/dashboard/admin/templates/$templateId': typeof DashboardAdminTemplatesTemplateIdRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
+  '/dashboard/judge/$salonId': typeof DashboardJudgeSalonIdRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
   '/dashboard/admin/salons/$salonId': typeof DashboardAdminSalonsSalonIdRoute
   '/dashboard/admin/templates/$templateId': typeof DashboardAdminTemplatesTemplateIdRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/onboarding_/success': typeof OnboardingSuccessRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
+  '/dashboard/judge/$salonId': typeof DashboardJudgeSalonIdRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/admin/salons/$salonId': typeof DashboardAdminSalonsSalonIdRoute
   '/dashboard/admin/templates/$templateId': typeof DashboardAdminTemplatesTemplateIdRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/onboarding/success'
     | '/dashboard/'
     | '/dashboard/admin/members'
+    | '/dashboard/judge/$salonId'
     | '/dashboard/admin/'
     | '/dashboard/admin/salons/$salonId'
     | '/dashboard/admin/templates/$templateId'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/onboarding/success'
     | '/dashboard'
     | '/dashboard/admin/members'
+    | '/dashboard/judge/$salonId'
     | '/dashboard/admin'
     | '/dashboard/admin/salons/$salonId'
     | '/dashboard/admin/templates/$templateId'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/onboarding_/success'
     | '/dashboard/'
     | '/dashboard/admin/members'
+    | '/dashboard/judge/$salonId'
     | '/dashboard/admin/'
     | '/dashboard/admin/salons/$salonId'
     | '/dashboard/admin/templates/$templateId'
@@ -288,6 +300,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminIndexRouteImport
       parentRoute: typeof DashboardAdminRouteRoute
     }
+    '/dashboard/judge/$salonId': {
+      id: '/dashboard/judge/$salonId'
+      path: '/judge/$salonId'
+      fullPath: '/dashboard/judge/$salonId'
+      preLoaderRoute: typeof DashboardJudgeSalonIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/admin/members': {
       id: '/dashboard/admin/members'
       path: '/members'
@@ -352,12 +371,14 @@ interface DashboardRouteRouteChildren {
   DashboardAdminRouteRoute: typeof DashboardAdminRouteRouteWithChildren
   DashboardHistoryRoute: typeof DashboardHistoryRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardJudgeSalonIdRoute: typeof DashboardJudgeSalonIdRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardAdminRouteRoute: DashboardAdminRouteRouteWithChildren,
   DashboardHistoryRoute: DashboardHistoryRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardJudgeSalonIdRoute: DashboardJudgeSalonIdRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

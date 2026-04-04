@@ -50,6 +50,10 @@ import {
   withdrawSubmissionRoute,
   getSalonSubmissionSummaryRoute,
 } from "./submission-routes.ts";
+import {
+  getJudgingSubmissionsRoute,
+  saveScoreRoute,
+} from "./judging-routes.ts";
 
 const healthy = oc.output(z.string());
 
@@ -89,6 +93,10 @@ export const contract = {
     submitPrint: submitPrintRoute,
     withdraw: withdrawSubmissionRoute,
     salonSummary: getSalonSubmissionSummaryRoute,
+  },
+  judging: {
+    submissions: getJudgingSubmissionsRoute,
+    saveScore: saveScoreRoute,
   },
   salonTemplate: {
     list: listTemplatesRoute,

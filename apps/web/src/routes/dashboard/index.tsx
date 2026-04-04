@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { useState, useRef } from "react";
@@ -255,6 +255,15 @@ function ActiveSalonSubmissions({ salon }: { salon: SalonDto }) {
       {salon.status === "judging" && (
         <div className="mb-8 rounded-lg border border-border p-4">
           <p className="text-sm text-muted-foreground">Submissions are closed. Judging is underway.</p>
+          {salon.judgeId && (
+            <Link
+              to="/dashboard/judge/$salonId"
+              params={{ salonId: salon.id }}
+              className="mt-3 inline-block rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+            >
+              Open Judging Interface
+            </Link>
+          )}
         </div>
       )}
 
