@@ -135,7 +135,7 @@ function PrintSubmitForm({ salon, categoryId, onSuccess }: { salon: SalonDto; ca
 
 // ── Submission card ───────────────────────────────────────────────────────────
 
-function SubmissionCard({ submission, onWithdraw }: { submission: SubmissionDto; onWithdraw: () => void }) {
+function SubmissionCard({ submission, onWithdraw, showScores }: { submission: SubmissionDto; onWithdraw: () => void; showScores?: boolean }) {
   return (
     <div className={`flex items-start gap-4 rounded-lg border border-border p-3 ${submission.status === "withdrawn" ? "opacity-50" : ""}`}>
       {submission.imageUrl ? (
@@ -151,12 +151,28 @@ function SubmissionCard({ submission, onWithdraw }: { submission: SubmissionDto;
       )}
       <div className="flex-1 min-w-0">
         <p className="font-medium text-sm truncate">{submission.title ?? "Untitled"}</p>
-        <p className="text-xs text-muted-foreground">
-          {submission.originalFilename ?? "Print entry"}
-        </p>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {submission.status === "withdrawn" ? "Withdrawn" : "Submitted"}
-        </p>
+        {showScores && submission.score ? (
+          <div className="mt-0.5">
+            <span className="text-xs font-medium text-foreground">{submission.score.totalScore} pts</span>
+            {submission.score.criterionValues.length > 0 && (
+              <span className="text-xs text-muted-foreground ml-2">
+                ({submission.score.criterionValues.map((cv) => `${cv.criterionName}: ${cv.value}`).join(", ")})
+              </span>
+            )}
+            {submission.score.comment && (
+              <p className="text-xs text-muted-foreground italic mt-0.5">"{submission.score.comment}"</p>
+            )}
+          </div>
+        ) : (
+          <>
+            <p className="text-xs text-muted-foreground">
+              {submission.originalFilename ?? "Print entry"}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {submission.status === "withdrawn" ? "Withdrawn" : "Submitted"}
+            </p>
+          </>
+        )}
       </div>
       {submission.status !== "withdrawn" && (
         <button onClick={onWithdraw} className="text-xs text-red-500 hover:text-red-700 shrink-0">
@@ -280,6 +296,7 @@ function ActiveSalonSubmissions({ salon }: { salon: SalonDto }) {
               key={s.id}
               submission={s}
               onWithdraw={() => withdraw.mutate({ submissionId: s.id })}
+              showScores={salon.status === "complete"}
             />
           ))}
         </div>

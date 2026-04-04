@@ -1,6 +1,18 @@
 import { oc } from "@orpc/contract";
 import { z } from "zod";
 
+export const submissionScoreDto = z.object({
+  totalScore: z.string().nullable(),
+  comment: z.string().nullable(),
+  isComplete: z.boolean(),
+  criterionValues: z.array(
+    z.object({
+      criterionName: z.string(),
+      value: z.string(),
+    }),
+  ),
+});
+
 export const submissionDto = z.object({
   id: z.string(),
   salonCategoryId: z.string(),
@@ -13,6 +25,7 @@ export const submissionDto = z.object({
   status: z.enum(["pending", "accepted", "withdrawn"]),
   title: z.string().nullable(),
   imageUrl: z.string().nullable(),
+  score: submissionScoreDto.nullable(),
   submittedAt: z.date(),
   createdAt: z.date(),
   updatedAt: z.date(),
