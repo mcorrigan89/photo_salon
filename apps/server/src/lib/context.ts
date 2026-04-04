@@ -46,7 +46,7 @@ export class ContextLogger {
     this.baseLogger.error(
       { userId: this.userContext?.user?.id ?? null },
       message instanceof Error ? message.message : message,
-      ...args
+      ...args,
     );
   }
 }

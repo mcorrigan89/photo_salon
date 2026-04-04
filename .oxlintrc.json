@@ -18,10 +18,5 @@
       }
     }
   ],
-  "ignorePatterns": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/.output/**",
-    "**/routeTree.gen.ts"
-  ]
+  "ignorePatterns": ["**/node_modules/**", "**/dist/**", "**/.output/**", "**/routeTree.gen.ts"]
 }

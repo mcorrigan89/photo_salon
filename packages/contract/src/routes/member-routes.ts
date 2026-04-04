@@ -26,7 +26,7 @@ export const addMemberRoute = oc
       email: z.string().email(),
       memberNumber: z.string().min(1).nullable(),
       role: z.enum(["admin", "judge", "member"]),
-    })
+    }),
   )
   .output(memberDto);
 
@@ -36,7 +36,7 @@ export const updateMemberRoute = oc
       memberId: z.string(),
       memberNumber: z.string().min(1).nullable().optional(),
       role: z.enum(["admin", "judge", "member"]).optional(),
-    })
+    }),
   )
   .output(memberDto);
 

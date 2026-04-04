@@ -16,10 +16,6 @@
     "compile": "tsc --noEmit"
   },
   "dependencies": {
-    "@photo-salon/contract": "workspace:*",
-    "@photo-salon/database": "workspace:*",
-    "@photo-salon/env": "workspace:*",
-    "@photo-salon/logger": "workspace:*",
     "@aws-sdk/client-s3": "^3.1004.0",
     "@hono/node-server": "1.19.11",
     "@opentelemetry/api": "1.9.0",
@@ -37,6 +33,10 @@
     "@orpc/openapi": "1.13.6",
     "@orpc/server": "1.13.6",
     "@orpc/zod": "1.13.6",
+    "@photo-salon/contract": "workspace:*",
+    "@photo-salon/database": "workspace:*",
+    "@photo-salon/env": "workspace:*",
+    "@photo-salon/logger": "workspace:*",
     "better-auth": "1.5.4",
     "dotenv": "17.3.1",
     "dotenv-cli": "11.0.0",

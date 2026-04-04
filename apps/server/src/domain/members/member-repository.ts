@@ -35,7 +35,7 @@ export class MemberRepository {
   async findByUserAndOrg(
     _ctx: UserContext,
     userId: string,
-    organizationId: string
+    organizationId: string,
   ): Promise<MemberEntity | null> {
     const rows = await this.db
       .select()
@@ -55,7 +55,7 @@ export class MemberRepository {
       organizationId: string;
       memberNumber: string | null;
       role: string;
-    }
+    },
   ): Promise<MemberEntity> {
     const [row] = await this.db
       .insert(member)
@@ -76,7 +76,7 @@ export class MemberRepository {
   async update(
     _ctx: UserContext,
     memberId: string,
-    params: { memberNumber?: string | null; role?: string }
+    params: { memberNumber?: string | null; role?: string },
   ): Promise<MemberEntity> {
     const updates: Record<string, unknown> = {};
     if (params.memberNumber !== undefined) updates.memberNumber = params.memberNumber;
@@ -97,10 +97,7 @@ export class MemberRepository {
     return this.db.query.user.findFirst({ where: eq(user.email, email) });
   }
 
-  async createUser(
-    _ctx: UserContext,
-    params: { name: string; email: string }
-  ) {
+  async createUser(_ctx: UserContext, params: { name: string; email: string }) {
     const [row] = await this.db
       .insert(user)
       .values({

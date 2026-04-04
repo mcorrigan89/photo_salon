@@ -71,7 +71,7 @@ export function createApp() {
       exposeHeaders: ["Content-Length"],
       maxAge: 600,
       credentials: true,
-    })
+    }),
   );
 
   app.get("/", (c) => c.text("Photo Salon API"));

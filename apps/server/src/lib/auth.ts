@@ -24,7 +24,7 @@ async function getActiveOrganization(userId: string) {
       where: and(eq(sessionTable.userId, userId), isNotNull(sessionTable.activeOrganizationId)),
       orderBy: desc(sessionTable.createdAt),
     }),
-    toError
+    toError,
   );
   if (sessionResult.isErr()) throw sessionResult.error;
   const previousSession = sessionResult.value;
@@ -34,10 +34,10 @@ async function getActiveOrganization(userId: string) {
       db.query.member.findFirst({
         where: and(
           eq(member.userId, userId),
-          eq(member.organizationId, previousSession.activeOrganizationId)
+          eq(member.organizationId, previousSession.activeOrganizationId),
         ),
       }),
-      toError
+      toError,
     );
     if (memberResult.isErr()) throw memberResult.error;
     if (memberResult.value) {
@@ -50,7 +50,7 @@ async function getActiveOrganization(userId: string) {
       where: eq(member.userId, userId),
       orderBy: desc(member.createdAt),
     }),
-    toError
+    toError,
   );
   if (recentResult.isErr()) throw recentResult.error;
 
