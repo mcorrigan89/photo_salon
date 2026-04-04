@@ -42,6 +42,7 @@ function DashboardLayout() {
             <span className="text-sm font-semibold">{user?.activeOrganization?.name ?? "Photo Salon"}</span>
             <nav className="flex items-center gap-1">
               <NavLink to="/dashboard" exact>Home</NavLink>
+              <NavLink to="/dashboard/history" exact>History</NavLink>
               {isAdmin && <NavLink to="/dashboard/admin">Admin</NavLink>}
             </nav>
           </div>
