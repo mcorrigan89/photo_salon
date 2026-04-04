@@ -95,9 +95,23 @@ function SalonSubmissions({ salon }: { salon: SalonDto }) {
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{sub.title ?? "Untitled"}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {sub.originalFilename ?? "Print entry"}
-                    </p>
+                    {sub.score ? (
+                      <div className="mt-0.5">
+                        <span className="text-xs font-medium text-foreground">{sub.score.totalScore} pts</span>
+                        {sub.score.criterionValues.length > 0 && (
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({sub.score.criterionValues.map((cv) => `${cv.criterionName}: ${cv.value}`).join(", ")})
+                          </span>
+                        )}
+                        {sub.score.comment && (
+                          <p className="text-xs text-muted-foreground italic mt-0.5">"{sub.score.comment}"</p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        {sub.originalFilename ?? "Print entry"}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}

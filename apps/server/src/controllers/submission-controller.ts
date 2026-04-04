@@ -3,9 +3,15 @@ import { type UserContext } from "@/lib/context.ts";
 import { type AppDomain } from "@/domain/domain.ts";
 import { type SubmissionDto, type SalonSubmissionSummaryDto } from "@photo-salon/contract";
 import { type SubmissionEntity } from "@/domain/submissions/submission-entity.ts";
+import { type ScoreEntity } from "@/domain/scoring/score-entity.ts";
+import { type SalonEntity } from "@/domain/salons/salon-entity.ts";
 import { getSignedViewUrl } from "@/lib/storage.ts";
 
-async function toDto(entity: SubmissionEntity): Promise<SubmissionDto> {
+async function toDto(
+  entity: SubmissionEntity,
+  scoreEntity: ScoreEntity | null,
+  salon: SalonEntity | null,
+): Promise<SubmissionDto> {
   let imageUrl: string | null = null;
   if (entity.storageKey) {
     try {
@@ -14,6 +20,24 @@ async function toDto(entity: SubmissionEntity): Promise<SubmissionDto> {
       // S3 unavailable — leave null
     }
   }
+
+  // Only show scores when salon is complete
+  let score: SubmissionDto["score"] = null;
+  if (scoreEntity && salon?.status === "complete") {
+    score = {
+      totalScore: scoreEntity.totalScore,
+      comment: scoreEntity.comment,
+      isComplete: scoreEntity.isComplete,
+      criterionValues: scoreEntity.criterionValues.map((cv) => {
+        const criterion = salon.criteria.find((c) => c.id === cv.salonScoringCriterionId);
+        return {
+          criterionName: criterion?.name ?? "Unknown",
+          value: cv.value,
+        };
+      }),
+    };
+  }
+
   return {
     id: entity.id,
     salonCategoryId: entity.salonCategoryId,
@@ -26,14 +50,11 @@ async function toDto(entity: SubmissionEntity): Promise<SubmissionDto> {
     status: entity.status,
     title: entity.title,
     imageUrl,
+    score,
     submittedAt: entity.submittedAt,
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
   };
-}
-
-async function toDtos(entities: SubmissionEntity[]): Promise<SubmissionDto[]> {
-  return Promise.all(entities.map(toDto));
 }
 
 function requireMemberId(ctx: UserContext): { userId: string } {
@@ -48,10 +69,20 @@ export class SubmissionController {
     input: { salonId: string },
   ): Promise<SubmissionDto[]> {
     const { userId } = requireMemberId(ctx);
-    // Find the member record for this user in the salon's org
     const memberId = await this.resolveMemberId(ctx, domain, userId, input.salonId);
     const submissions = await domain.submissionService.listMySubmissions(ctx, memberId, input.salonId);
-    return toDtos(submissions);
+
+    // Load salon and scores for completed salons
+    const salon = await domain.salonService.getSalon(ctx, input.salonId);
+    let scoreMap = new Map<string, ScoreEntity>();
+    if (salon.status === "complete") {
+      const scores = await domain.scoringService.getScoresForSalon(ctx, input.salonId);
+      scoreMap = new Map(scores.map((s) => [s.submissionId, s]));
+    }
+
+    return Promise.all(
+      submissions.map((sub) => toDto(sub, scoreMap.get(sub.id) ?? null, salon)),
+    );
   }
 
   async listAllMySubmissions(
@@ -59,14 +90,13 @@ export class SubmissionController {
     domain: AppDomain,
   ): Promise<SubmissionDto[]> {
     const { userId } = requireMemberId(ctx);
-    // Get member for active org
     const orgId = ctx.session?.activeOrganizationId;
     if (!orgId) throw new ORPCError("FORBIDDEN", { message: "No active organization." });
     const members = await domain.memberService.listMembers(ctx, orgId);
     const member = members.find((m) => m.userId === userId);
     if (!member) throw new ORPCError("FORBIDDEN", { message: "Not a member." });
     const submissions = await domain.submissionService.listAllMySubmissions(ctx, member.id);
-    return toDtos(submissions);
+    return Promise.all(submissions.map((sub) => toDto(sub, null, null)));
   }
 
   async submitPrint(
@@ -80,7 +110,7 @@ export class SubmissionController {
       ...input,
       memberId,
     });
-    return toDto(submission);
+    return toDto(submission, null, null);
   }
 
   async submitDigital(
@@ -101,7 +131,7 @@ export class SubmissionController {
       ...params,
       memberId,
     });
-    return toDto(submission);
+    return toDto(submission, null, null);
   }
 
   async salonSummary(
@@ -141,7 +171,7 @@ export class SubmissionController {
     const member = members.find((m) => m.userId === userId);
     if (!member) throw new ORPCError("FORBIDDEN");
     const submission = await domain.submissionService.withdraw(ctx, submissionId, member.id);
-    return toDto(submission);
+    return toDto(submission, null, null);
   }
 
   private async resolveMemberId(
