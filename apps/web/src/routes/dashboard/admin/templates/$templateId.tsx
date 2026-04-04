@@ -4,11 +4,9 @@ import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
-import { requireAdmin } from "@/lib/require-admin";
 import type { SalonTemplateDto, TemplateCriterionDto, TemplateSlotDto } from "@photo-salon/contract";
 
-export const Route = createFileRoute("/dashboard/templates/$templateId")({
-  beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
+export const Route = createFileRoute("/dashboard/admin/templates/$templateId")({
   component: TemplateDetailPage,
 });
 
@@ -467,7 +465,7 @@ function TemplateDetailPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <Link to="/dashboard/templates" className="text-sm text-zinc-500 hover:text-foreground">
+        <Link to="/dashboard/admin/templates" className="text-sm text-zinc-500 hover:text-foreground">
           ← Templates
         </Link>
       </div>

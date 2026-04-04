@@ -5,11 +5,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
 import { useOrganizationId } from "@/lib/use-org";
-import { requireAdmin } from "@/lib/require-admin";
 import type { SalonDto } from "@photo-salon/contract";
 
-export const Route = createFileRoute("/dashboard/salons/")({
-  beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
+export const Route = createFileRoute("/dashboard/admin/salons/")({
   component: SalonsPage,
 });
 
@@ -72,7 +70,7 @@ function CreateSalonModal({ organizationId, onClose }: { organizationId: string;
               Cancel
             </button>
             <Link
-              to="/dashboard/templates"
+              to="/dashboard/admin/templates"
               className="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
             >
               Create Template
@@ -174,7 +172,7 @@ function SalonCard({ salon }: { salon: SalonDto }) {
   const status = STATUS_LABELS[salon.status] ?? STATUS_LABELS.draft;
   return (
     <Link
-      to="/dashboard/salons/$salonId"
+      to="/dashboard/admin/salons/$salonId"
       params={{ salonId: salon.id }}
       className="block rounded-lg border border-border p-4 hover:border-zinc-500 transition-colors"
     >

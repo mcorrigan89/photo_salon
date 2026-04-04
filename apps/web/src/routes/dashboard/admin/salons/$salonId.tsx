@@ -5,11 +5,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
 import { useOrganizationId } from "@/lib/use-org";
-import { requireAdmin } from "@/lib/require-admin";
 import type { SalonDto, SalonCriterionDto, SalonCategoryDto } from "@photo-salon/contract";
 
-export const Route = createFileRoute("/dashboard/salons/$salonId")({
-  beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
+export const Route = createFileRoute("/dashboard/admin/salons/$salonId")({
   component: SalonDetailPage,
 });
 
@@ -67,7 +65,7 @@ function StatusControls({ salon }: { salon: SalonDto }) {
     ...orpc.salon.delete.mutationOptions(),
     onSuccess: () => {
       toast.success("Salon deleted.");
-      window.location.assign("/dashboard/salons");
+      window.location.assign("/dashboard/admin/salons");
     },
     onError: (err: Error) => toast.error(err.message ?? "Failed to delete."),
   });
@@ -640,7 +638,7 @@ function SalonDetailPage() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <Link to="/dashboard/salons" className="text-sm text-zinc-500 hover:text-foreground">
+        <Link to="/dashboard/admin/salons" className="text-sm text-zinc-500 hover:text-foreground">
           ← Salons
         </Link>
       </div>

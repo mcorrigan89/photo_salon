@@ -5,10 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
 import { useOrganizationId } from "@/lib/use-org";
-import { requireAdmin } from "@/lib/require-admin";
-
-export const Route = createFileRoute("/dashboard/templates/")({
-  beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
+export const Route = createFileRoute("/dashboard/admin/templates/")({
   component: TemplatesPage,
 });
 
@@ -110,7 +107,7 @@ function TemplatesPage() {
             >
               <div>
                 <Link
-                  to="/dashboard/templates/$templateId"
+                  to="/dashboard/admin/templates/$templateId"
                   params={{ templateId: t.id }}
                   className="font-medium hover:underline"
                 >

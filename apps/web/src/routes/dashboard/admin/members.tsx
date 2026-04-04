@@ -5,11 +5,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
 import { useOrganizationId } from "@/lib/use-org";
-import { requireAdmin } from "@/lib/require-admin";
 import type { MemberDto } from "@photo-salon/contract";
 
-export const Route = createFileRoute("/dashboard/members")({
-  beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
+export const Route = createFileRoute("/dashboard/admin/members")({
   component: MembersPage,
 });
 
