@@ -43,6 +43,12 @@ import {
   updateCategoryRoute,
   removeCategoryRoute,
 } from "./salon-routes.ts";
+import {
+  listMySubmissionsRoute,
+  listAllMySubmissionsRoute,
+  submitPrintRoute,
+  withdrawSubmissionRoute,
+} from "./submission-routes.ts";
 
 const healthy = oc.output(z.string());
 
@@ -75,6 +81,12 @@ export const contract = {
     addCategory: addCategoryRoute,
     updateCategory: updateCategoryRoute,
     removeCategory: removeCategoryRoute,
+  },
+  submission: {
+    listMine: listMySubmissionsRoute,
+    listAll: listAllMySubmissionsRoute,
+    submitPrint: submitPrintRoute,
+    withdraw: withdrawSubmissionRoute,
   },
   salonTemplate: {
     list: listTemplatesRoute,

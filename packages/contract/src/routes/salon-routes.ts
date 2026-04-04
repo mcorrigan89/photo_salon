@@ -28,6 +28,7 @@ export const salonDto = z.object({
   month: z.number(),
   status: z.enum(["draft", "open", "judging", "complete"]),
   judgeId: z.string().nullable(),
+  medium: z.enum(["digital", "print"]),
   maxSubmissionsPerMember: z.number(),
   slideshowRevealMode: z.enum(["score_after", "score_alongside"]),
   slideshowScheduledAt: z.date().nullable(),
@@ -70,6 +71,7 @@ export const updateSalonRoute = oc
     z.object({
       salonId: z.string(),
       name: z.string().min(1).optional(),
+      medium: z.enum(["digital", "print"]).optional(),
       judgeId: z.string().nullable().optional(),
       maxSubmissionsPerMember: z.number().int().min(1).optional(),
       slideshowRevealMode: z.enum(["score_after", "score_alongside"]).optional(),

@@ -10,6 +10,7 @@ export class SalonTemplateEntity {
     public readonly id: string,
     public readonly organizationId: string,
     public readonly name: string,
+    public readonly medium: "digital" | "print",
     public readonly maxSubmissionsPerMember: number,
     public readonly slideshowRevealMode: "score_after" | "score_alongside",
     public readonly createdAt: Date,
@@ -23,6 +24,7 @@ export class SalonTemplateEntity {
   static create(params: {
     organizationId: string;
     name: string;
+    medium?: "digital" | "print";
     maxSubmissionsPerMember?: number;
     slideshowRevealMode?: "score_after" | "score_alongside";
   }): SalonTemplateEntity {
@@ -31,6 +33,7 @@ export class SalonTemplateEntity {
       crypto.randomUUID(),
       params.organizationId,
       params.name,
+      params.medium ?? "digital",
       params.maxSubmissionsPerMember ?? 3,
       params.slideshowRevealMode ?? "score_after",
       now,
@@ -49,6 +52,7 @@ export class SalonTemplateEntity {
       template.id,
       template.organizationId,
       template.name,
+      template.medium,
       template.maxSubmissionsPerMember,
       template.slideshowRevealMode,
       template.createdAt,
@@ -60,6 +64,7 @@ export class SalonTemplateEntity {
 
   with(params: {
     name?: string;
+    medium?: "digital" | "print";
     maxSubmissionsPerMember?: number;
     slideshowRevealMode?: "score_after" | "score_alongside";
   }): SalonTemplateEntity {
@@ -67,6 +72,7 @@ export class SalonTemplateEntity {
       this.id,
       this.organizationId,
       params.name ?? this.name,
+      params.medium ?? this.medium,
       params.maxSubmissionsPerMember ?? this.maxSubmissionsPerMember,
       params.slideshowRevealMode ?? this.slideshowRevealMode,
       this.createdAt,

@@ -41,6 +41,7 @@ function toDto(entity: SalonEntity): SalonDto {
     month: entity.month,
     status: entity.status,
     judgeId: entity.judgeId,
+    medium: entity.medium,
     maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
     slideshowRevealMode: entity.slideshowRevealMode,
     slideshowScheduledAt: entity.slideshowScheduledAt,
