@@ -5,8 +5,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
 import { useOrganizationId } from "@/lib/use-org";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const Route = createFileRoute("/dashboard/templates/")({
+  beforeLoad: async ({ context }) => requireAdmin(context.queryClient),
   component: TemplatesPage,
 });
 

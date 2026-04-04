@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { EmailService } from "./email/email-service.ts";
 import { MemberService } from "./members/member-service.ts";
 import { OnboardingService } from "./onboarding/onboarding-service.ts";
+import { SalonService } from "./salons/salon-service.ts";
 import { SalonTemplateService } from "./salon-templates/salon-template-service.ts";
 import { UserService } from "./users/user-service.ts";
 
@@ -12,6 +13,7 @@ export class AppDomain {
     @inject(EmailService) public emailService: EmailService,
     @inject(MemberService) public memberService: MemberService,
     @inject(SalonTemplateService) public salonTemplateService: SalonTemplateService,
+    @inject(SalonService) public salonService: SalonService,
     @inject(OnboardingService) public onboardingService: OnboardingService,
   ) {}
 }

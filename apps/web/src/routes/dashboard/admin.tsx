@@ -46,21 +46,20 @@ function AdminDashboard() {
 
       <div className="grid gap-3">
         <AdminLink
-          to="/dashboard/members"
-          title="Members"
-          description="Add, edit, and remove club members"
+          to="/dashboard/salons"
+          title="Salons"
+          description="Create and manage monthly salon events"
         />
         <AdminLink
           to="/dashboard/templates"
           title="Salon Templates"
           description="Configure scoring criteria and category slots"
         />
-      </div>
-
-      <div className="mt-8 rounded-lg border border-border p-6">
-        <p className="text-sm text-muted-foreground">
-          Salon management coming soon. Create salons from templates to open submissions.
-        </p>
+        <AdminLink
+          to="/dashboard/members"
+          title="Members"
+          description="Add, edit, and remove club members"
+        />
       </div>
     </div>
   );
