@@ -310,7 +310,7 @@ function JudgingPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-8 max-w-3xl mx-auto">
       <div className="mb-6">
         <Link to="/dashboard" className="text-sm text-zinc-500 hover:text-foreground">
           ← Dashboard

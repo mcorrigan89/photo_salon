@@ -317,7 +317,7 @@ function MemberDashboard() {
   const activeSalon = openSalon ?? judgingSalon;
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-8 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-2">Welcome, {user?.name}</h1>
       <p className="text-muted-foreground text-sm mb-8">
         {user?.activeOrganization?.name}
