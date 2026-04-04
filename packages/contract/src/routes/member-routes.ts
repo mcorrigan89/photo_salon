@@ -37,6 +37,7 @@ export const updateMemberRoute = oc
   .input(
     z.object({
       memberId: z.string(),
+      name: z.string().min(1).optional(),
       memberNumber: z.string().min(1).nullable().optional(),
       role: z.enum(["admin", "judge", "member"]).optional(),
     }),

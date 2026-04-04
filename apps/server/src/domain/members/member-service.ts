@@ -67,6 +67,7 @@ export class MemberService {
     ctx: UserContext,
     params: {
       memberId: string;
+      name?: string;
       memberNumber?: string | null;
       role?: string;
     },
@@ -75,6 +76,14 @@ export class MemberService {
     if (!existing) {
       throw new ORPCError("NOT_FOUND", { message: "Member not found." });
     }
+
+    if (params.name) {
+      const userEntity = await this.userRepo.findById(ctx, existing.userId);
+      if (userEntity) {
+        await this.userRepo.save(ctx, userEntity.with({ name: params.name }));
+      }
+    }
+
     return this.repo.save(ctx, existing.with({ memberNumber: params.memberNumber, role: params.role }));
   }
 

@@ -7,6 +7,13 @@ export const currentUserDto = z.object({
   email: z.string(),
   emailVerified: z.boolean(),
   role: z.string().nullable(),
+  activeOrganization: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      memberRole: z.string(),
+    })
+    .nullable(),
   session: z.object({
     id: z.string(),
     createdAt: z.date(),

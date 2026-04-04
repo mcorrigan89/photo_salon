@@ -41,7 +41,7 @@ export class MemberController {
   async updateMember(
     ctx: UserContext,
     domain: AppDomain,
-    input: { memberId: string; memberNumber?: string | null; role?: string },
+    input: { memberId: string; name?: string; memberNumber?: string | null; role?: string },
   ): Promise<MemberDto> {
     const entity = await domain.memberService.updateMember(ctx, input);
     return toDto(entity);
