@@ -54,6 +54,7 @@ import {
   getJudgingSubmissionsRoute,
   saveScoreRoute,
 } from "./judging-routes.ts";
+import { getSlideshowRoute } from "./slideshow-routes.ts";
 
 const healthy = oc.output(z.string());
 
@@ -93,6 +94,9 @@ export const contract = {
     submitPrint: submitPrintRoute,
     withdraw: withdrawSubmissionRoute,
     salonSummary: getSalonSubmissionSummaryRoute,
+  },
+  slideshow: {
+    get: getSlideshowRoute,
   },
   judging: {
     submissions: getJudgingSubmissionsRoute,

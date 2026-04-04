@@ -44,6 +44,7 @@ function toDto(entity: SalonEntity): SalonDto {
     medium: entity.medium,
     maxSubmissionsPerMember: entity.maxSubmissionsPerMember,
     slideshowRevealMode: entity.slideshowRevealMode,
+    awardThreshold: entity.awardThreshold,
     slideshowScheduledAt: entity.slideshowScheduledAt,
     slideshowStartedAt: entity.slideshowStartedAt,
     submissionsCloseAt: entity.submissionsCloseAt,

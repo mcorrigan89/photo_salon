@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as SlideshowSalonIdRouteImport } from './routes/slideshow/$salonId'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding_.success'
 import { Route as DashboardHistoryRouteImport } from './routes/dashboard/history'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
@@ -50,6 +51,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
+} as any)
+const SlideshowSalonIdRoute = SlideshowSalonIdRouteImport.update({
+  id: '/slideshow/$salonId',
+  path: '/slideshow/$salonId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
   id: '/onboarding_/success',
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/history': typeof DashboardHistoryRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/slideshow/$salonId': typeof SlideshowSalonIdRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
   '/dashboard/judge/$salonId': typeof DashboardJudgeSalonIdRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/history': typeof DashboardHistoryRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/slideshow/$salonId': typeof SlideshowSalonIdRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
   '/dashboard/judge/$salonId': typeof DashboardJudgeSalonIdRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/history': typeof DashboardHistoryRoute
   '/onboarding_/success': typeof OnboardingSuccessRoute
+  '/slideshow/$salonId': typeof SlideshowSalonIdRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/members': typeof DashboardAdminMembersRoute
   '/dashboard/judge/$salonId': typeof DashboardJudgeSalonIdRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/dashboard/history'
     | '/onboarding/success'
+    | '/slideshow/$salonId'
     | '/dashboard/'
     | '/dashboard/admin/members'
     | '/dashboard/judge/$salonId'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/dashboard/history'
     | '/onboarding/success'
+    | '/slideshow/$salonId'
     | '/dashboard'
     | '/dashboard/admin/members'
     | '/dashboard/judge/$salonId'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/dashboard/history'
     | '/onboarding_/success'
+    | '/slideshow/$salonId'
     | '/dashboard/'
     | '/dashboard/admin/members'
     | '/dashboard/judge/$salonId'
@@ -226,6 +238,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   OnboardingSuccessRoute: typeof OnboardingSuccessRoute
+  SlideshowSalonIdRoute: typeof SlideshowSalonIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -264,6 +277,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/slideshow/$salonId': {
+      id: '/slideshow/$salonId'
+      path: '/slideshow/$salonId'
+      fullPath: '/slideshow/$salonId'
+      preLoaderRoute: typeof SlideshowSalonIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/onboarding_/success': {
       id: '/onboarding_/success'
@@ -392,6 +412,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   OnboardingSuccessRoute: OnboardingSuccessRoute,
+  SlideshowSalonIdRoute: SlideshowSalonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

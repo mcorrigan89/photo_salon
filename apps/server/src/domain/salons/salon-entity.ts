@@ -27,6 +27,7 @@ export class SalonEntity {
     public readonly medium: "digital" | "print",
     public readonly maxSubmissionsPerMember: number,
     public readonly slideshowRevealMode: "score_after" | "score_alongside",
+    public readonly awardThreshold: string | null,
     public readonly slideshowScheduledAt: Date | null,
     public readonly slideshowStartedAt: Date | null,
     public readonly submissionsCloseAt: Date | null,
@@ -47,6 +48,7 @@ export class SalonEntity {
     medium?: "digital" | "print";
     maxSubmissionsPerMember?: number;
     slideshowRevealMode?: "score_after" | "score_alongside";
+    awardThreshold?: string | null;
   }): SalonEntity {
     const now = new Date();
     return new SalonEntity(
@@ -61,6 +63,7 @@ export class SalonEntity {
       params.medium ?? "digital",
       params.maxSubmissionsPerMember ?? 3,
       params.slideshowRevealMode ?? "score_after",
+      params.awardThreshold ?? null,
       null,
       null,
       null,
@@ -88,6 +91,7 @@ export class SalonEntity {
       model.medium,
       model.maxSubmissionsPerMember,
       model.slideshowRevealMode,
+      model.awardThreshold,
       model.slideshowScheduledAt,
       model.slideshowStartedAt,
       model.submissionsCloseAt,
@@ -103,6 +107,7 @@ export class SalonEntity {
     judgeId?: string | null;
     maxSubmissionsPerMember?: number;
     slideshowRevealMode?: "score_after" | "score_alongside";
+    awardThreshold?: string | null;
     slideshowScheduledAt?: Date | null;
     submissionsCloseAt?: Date | null;
   }): SalonEntity {
@@ -118,6 +123,7 @@ export class SalonEntity {
       this.medium,
       params.maxSubmissionsPerMember ?? this.maxSubmissionsPerMember,
       params.slideshowRevealMode ?? this.slideshowRevealMode,
+      params.awardThreshold !== undefined ? params.awardThreshold : this.awardThreshold,
       params.slideshowScheduledAt !== undefined ? params.slideshowScheduledAt : this.slideshowScheduledAt,
       this.slideshowStartedAt,
       params.submissionsCloseAt !== undefined ? params.submissionsCloseAt : this.submissionsCloseAt,
@@ -150,6 +156,7 @@ export class SalonEntity {
       this.medium,
       this.maxSubmissionsPerMember,
       this.slideshowRevealMode,
+      this.awardThreshold,
       this.slideshowScheduledAt,
       this.slideshowStartedAt,
       this.submissionsCloseAt,

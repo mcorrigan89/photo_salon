@@ -650,7 +650,19 @@ function SalonDetailPage() {
             {MONTH_NAMES[salon.month]} {salon.year} · {STATUS_LABELS[salon.status]}
           </p>
         </div>
-        <StatusControls salon={salon} />
+        <div className="flex items-center gap-3">
+          {(salon.status === "judging" || salon.status === "complete") && (
+            <Link
+              to="/slideshow/$salonId"
+              params={{ salonId: salon.id }}
+              target="_blank"
+              className="rounded border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+            >
+              Launch Slideshow
+            </Link>
+          )}
+          <StatusControls salon={salon} />
+        </div>
       </div>
 
       <div className="grid gap-10 lg:grid-cols-[320px_1fr]">
