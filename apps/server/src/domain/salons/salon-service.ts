@@ -123,6 +123,46 @@ export class SalonService {
     return result;
   }
 
+  // ── Criteria ────────────────────────────────────────────────────────────
+
+  async addCriterion(
+    ctx: UserContext,
+    params: { salonId: string; name: string; minScore: number; maxScore: number; weight: string; displayOrder?: number },
+  ): Promise<SalonEntity> {
+    ctx.logger.info("Adding criterion to salon", params.salonId, params.name);
+    const salon = await this.requireDraft(ctx, params.salonId);
+    await this.repo.saveCriterion(ctx, SalonScoringCriterionEntity.create({ ...params, displayOrder: params.displayOrder ?? salon.criteria.length }));
+    return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
+  }
+
+  async updateCriterion(
+    ctx: UserContext,
+    params: { criterionId: string; name?: string; minScore?: number; maxScore?: number; weight?: string; displayOrder?: number },
+  ): Promise<SalonEntity> {
+    ctx.logger.info("Updating salon criterion", params.criterionId);
+    const { criterionId, ...updates } = params;
+    const salon = await this.findSalonByCriterionId(ctx, criterionId);
+    this.requireDraftStatus(salon);
+    const criterion = salon.criteria.find((c) => c.id === criterionId)!;
+    await this.repo.saveCriterion(ctx, criterion.with(updates));
+    return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
+  }
+
+  async removeCriterion(ctx: UserContext, criterionId: string): Promise<SalonEntity> {
+    ctx.logger.info("Removing salon criterion", criterionId);
+    const salon = await this.findSalonByCriterionId(ctx, criterionId);
+    this.requireDraftStatus(salon);
+    const criterion = salon.criteria.find((c) => c.id === criterionId)!;
+    await this.repo.deleteCriterion(ctx, criterion);
+    return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
+  }
+
+  private async findSalonByCriterionId(ctx: UserContext, criterionId: string): Promise<SalonEntity> {
+    const salon = await this.repo.findByCriterionId(ctx, criterionId);
+    if (!salon) throw new ORPCError("NOT_FOUND", { message: "Criterion not found." });
+    return salon;
+  }
+
   // ── Categories ──────────────────────────────────────────────────────────
 
   async addCategory(

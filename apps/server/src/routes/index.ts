@@ -117,6 +117,18 @@ const deleteSalon = authorizedRoute.salon.delete.handler(async ({ input, context
   return salonController.deleteSalon(context, context.domain, input.salonId);
 });
 
+const addSalonCriterion = authorizedRoute.salon.addCriterion.handler(async ({ input, context }) => {
+  return salonController.addCriterion(context, context.domain, input);
+});
+
+const updateSalonCriterion = authorizedRoute.salon.updateCriterion.handler(async ({ input, context }) => {
+  return salonController.updateCriterion(context, context.domain, input);
+});
+
+const removeSalonCriterion = authorizedRoute.salon.removeCriterion.handler(async ({ input, context }) => {
+  return salonController.removeCriterion(context, context.domain, input.criterionId);
+});
+
 const addCategory = authorizedRoute.salon.addCategory.handler(async ({ input, context }) => {
   return salonController.addCategory(context, context.domain, input);
 });
@@ -146,6 +158,9 @@ export const routerImplementation = base.router({
     update: updateSalon,
     transition: transitionSalon,
     delete: deleteSalon,
+    addCriterion: addSalonCriterion,
+    updateCriterion: updateSalonCriterion,
+    removeCriterion: removeSalonCriterion,
     addCategory,
     updateCategory,
     removeCategory,
