@@ -5,3 +5,4 @@ export { type SalonTemplateDto, type TemplateCriterionDto, type TemplateSlotDto 
 export { type SalonDto, type SalonCriterionDto, type SalonCategoryDto } from "./routes/salon-routes.ts";
 export { type SubmissionDto, type SalonSubmissionSummaryDto } from "./routes/submission-routes.ts";
 export { type OnboardingConfigDto } from "./routes/onboarding-routes.ts";
+export { type JudgingSubmissionDto, type ScoreDto } from "./routes/judging-routes.ts";
