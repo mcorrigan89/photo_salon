@@ -8,6 +8,22 @@ export const Route = createFileRoute("/dashboard/admin")({
       throw redirect({ to: "/dashboard" });
     }
   },
+  onEnter: async ({ context }) => {
+    const user = await context.queryClient.fetchQuery(orpc.currentUser.me.queryOptions());
+    if (!user?.activeOrganization) return;
+    await Promise.all([
+      context.queryClient.prefetchQuery(orpc.salonTemplate.list.queryOptions({
+        input: {
+          organizationId: user.activeOrganization?.id
+        }
+      })),
+      context.queryClient.prefetchQuery(orpc.member.list.queryOptions({
+        input: {
+          organizationId: user.activeOrganization?.id
+        }
+      }))
+    ])
+  },
   component: AdminDashboard,
 });
 
