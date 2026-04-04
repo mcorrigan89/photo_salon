@@ -28,6 +28,35 @@ export const submissionStatusEnum = pgEnum("submission_status", [
   "withdrawn",
 ]);
 
+export const submissionMediumEnum = pgEnum("submission_medium", [
+  "digital",
+  "print",
+]);
+
+// ─── Competition Classes ─────────────────────────────────────────────────────
+
+/**
+ * Optional per-org classification system (e.g. Novice, Intermediate, Advanced).
+ * If an org defines no classes, the system is ignored.
+ */
+export const competitionClass = pgTable(
+  "competition_class",
+  {
+    id: uuid("id")
+      .default(sql`pg_catalog.gen_random_uuid()`)
+      .primaryKey(),
+    organizationId: uuid("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    displayOrder: smallint("display_order").default(0).notNull(),
+    // When year-end points reach this threshold, auto-promote to next class (null = no auto-promote)
+    autoPromoteThreshold: smallint("auto_promote_threshold"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("competition_class_orgId_idx").on(table.organizationId)],
+);
+
 // ─── Salon Template ───────────────────────────────────────────────────────────
 
 /**
@@ -93,6 +122,11 @@ export const templateCategorySlot = pgTable(
     name: text("name").notNull(),
     // Per-category override; null means inherit from salonTemplate.maxSubmissionsPerMember
     maxSubmissionsPerMember: smallint("max_submissions_per_member"),
+    // Whether entries in this category get bonus points for year-end calculations
+    hasBonusPoints: boolean("has_bonus_points").default(false).notNull(),
+    bonusPoints: smallint("bonus_points").default(0).notNull(),
+    // JSON array of competition_class IDs allowed to enter. Empty/null = all allowed.
+    allowedClassIds: text("allowed_class_ids"),
     displayOrder: smallint("display_order").default(0).notNull(),
   },
   (table) => [index("template_slot_templateId_idx").on(table.templateId)],
@@ -186,6 +220,11 @@ export const salonCategory = pgTable(
     name: text("name").notNull(),
     // null = inherit from salon.maxSubmissionsPerMember
     maxSubmissionsPerMember: smallint("max_submissions_per_member"),
+    // Bonus points for year-end calculations (snapshotted from template slot)
+    hasBonusPoints: boolean("has_bonus_points").default(false).notNull(),
+    bonusPoints: smallint("bonus_points").default(0).notNull(),
+    // JSON array of competition_class IDs allowed to enter. Empty/null = all allowed.
+    allowedClassIds: text("allowed_class_ids"),
     displayOrder: smallint("display_order").default(0).notNull(),
   },
   (table) => [index("salon_category_salonId_idx").on(table.salonId)],
@@ -209,12 +248,15 @@ export const submission = pgTable(
     memberId: uuid("member_id")
       .notNull()
       .references(() => member.id, { onDelete: "cascade" }),
-    // S3 storage key
-    storageKey: text("storage_key").notNull(),
-    originalFilename: text("original_filename").notNull(),
-    fileSizeBytes: integer("file_size_bytes").notNull(),
-    widthPx: integer("width_px").notNull(),
-    heightPx: integer("height_px").notNull(),
+    // Digital or print submission
+    medium: submissionMediumEnum("medium").default("digital").notNull(),
+    // S3 storage key — nullable for print entries without a digital upload
+    storageKey: text("storage_key"),
+    originalFilename: text("original_filename"),
+    // Image metadata — nullable for print-only entries
+    fileSizeBytes: integer("file_size_bytes"),
+    widthPx: integer("width_px"),
+    heightPx: integer("height_px"),
     status: submissionStatusEnum("status").default("pending").notNull(),
     title: text("title"),
     submittedAt: timestamp("submitted_at").defaultNow().notNull(),
@@ -289,6 +331,13 @@ export const scoreCriterionValue = pgTable(
 );
 
 // ─── Relations ────────────────────────────────────────────────────────────────
+
+export const competitionClassRelations = relations(competitionClass, ({ one }) => ({
+  organization: one(organization, {
+    fields: [competitionClass.organizationId],
+    references: [organization.id],
+  }),
+}));
 
 export const salonTemplateRelations = relations(salonTemplate, ({ one, many }) => ({
   organization: one(organization, {

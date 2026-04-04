@@ -15,10 +15,12 @@ export class SalonService {
   ) {}
 
   async listSalons(ctx: UserContext, organizationId: string): Promise<SalonEntity[]> {
+    ctx.logger.trace("Listing salons", organizationId);
     return this.repo.listByOrganization(ctx, organizationId);
   }
 
   async getSalon(ctx: UserContext, salonId: string): Promise<SalonEntity> {
+    ctx.logger.trace("Getting salon", salonId);
     const salon = await this.repo.findById(ctx, salonId);
     if (!salon) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
     return salon;
@@ -34,12 +36,13 @@ export class SalonService {
       month: number;
     },
   ): Promise<SalonEntity> {
+    ctx.logger.info("Creating salon from template", params.templateId, params.name, `${params.year}/${params.month}`);
+
     const template = await this.templateRepo.findById(ctx, params.templateId);
     if (!template) {
       throw new ORPCError("NOT_FOUND", { message: "Template not found." });
     }
 
-    // Create the salon shell with settings copied from the template
     const salonEntity = SalonEntity.create({
       organizationId: params.organizationId,
       templateId: params.templateId,
@@ -51,8 +54,8 @@ export class SalonService {
     });
 
     const saved = await this.repo.save(ctx, salonEntity);
+    ctx.logger.info("Salon created", saved.id);
 
-    // Snapshot criteria from the template (immutable after creation)
     const criteria = template.criteria.map((c) =>
       SalonScoringCriterionEntity.create({
         salonId: saved.id,
@@ -64,8 +67,8 @@ export class SalonService {
       }),
     );
     await this.repo.saveCriteria(ctx, criteria);
+    ctx.logger.info("Snapshotted criteria", criteria.length);
 
-    // Snapshot category slots from the template
     const categories = template.slots.map((s) =>
       SalonCategoryEntity.create({
         salonId: saved.id,
@@ -75,6 +78,7 @@ export class SalonService {
       }),
     );
     await this.repo.saveCategories(ctx, categories);
+    ctx.logger.info("Snapshotted categories", categories.length);
 
     return this.repo.findById(ctx, saved.id) as Promise<SalonEntity>;
   }
@@ -91,6 +95,7 @@ export class SalonService {
       submissionsCloseAt?: Date | null;
     },
   ): Promise<SalonEntity> {
+    ctx.logger.info("Updating salon", params.salonId);
     const existing = await this.repo.findById(ctx, params.salonId);
     if (!existing) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
     return this.repo.save(ctx, existing.with(params));
@@ -104,13 +109,18 @@ export class SalonService {
     const existing = await this.repo.findById(ctx, salonId);
     if (!existing) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
 
+    ctx.logger.info("Transitioning salon", salonId, `${existing.status} → ${newStatus}`);
+
     if (!existing.canTransitionTo(newStatus)) {
+      ctx.logger.warn("Invalid salon transition", salonId, `${existing.status} → ${newStatus}`);
       throw new ORPCError("BAD_REQUEST", {
         message: `Cannot transition from "${existing.status}" to "${newStatus}".`,
       });
     }
 
-    return this.repo.save(ctx, existing.transitionTo(newStatus));
+    const result = await this.repo.save(ctx, existing.transitionTo(newStatus));
+    ctx.logger.info("Salon transitioned", salonId, newStatus);
+    return result;
   }
 
   // ── Categories ──────────────────────────────────────────────────────────
@@ -119,6 +129,7 @@ export class SalonService {
     ctx: UserContext,
     params: { salonId: string; name: string; maxSubmissionsPerMember?: number | null; displayOrder?: number },
   ): Promise<SalonEntity> {
+    ctx.logger.info("Adding category to salon", params.salonId, params.name);
     const salon = await this.requireDraft(ctx, params.salonId);
     await this.repo.saveCategory(ctx, SalonCategoryEntity.create(params));
     return this.repo.findById(ctx, salon.id) as Promise<SalonEntity>;
@@ -128,6 +139,7 @@ export class SalonService {
     ctx: UserContext,
     params: { categoryId: string; name?: string; maxSubmissionsPerMember?: number | null; displayOrder?: number },
   ): Promise<SalonEntity> {
+    ctx.logger.info("Updating category", params.categoryId);
     const { categoryId, ...updates } = params;
     const salon = await this.findSalonByCategoryId(ctx, categoryId);
     this.requireDraftStatus(salon);
@@ -137,6 +149,7 @@ export class SalonService {
   }
 
   async removeCategory(ctx: UserContext, categoryId: string): Promise<SalonEntity> {
+    ctx.logger.info("Removing category", categoryId);
     const salon = await this.findSalonByCategoryId(ctx, categoryId);
     this.requireDraftStatus(salon);
     const category = salon.categories.find((c) => c.id === categoryId)!;
@@ -164,15 +177,18 @@ export class SalonService {
   }
 
   async deleteSalon(ctx: UserContext, salonId: string): Promise<void> {
+    ctx.logger.info("Deleting salon", salonId);
     const existing = await this.repo.findById(ctx, salonId);
     if (!existing) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
 
     if (existing.status !== "draft") {
+      ctx.logger.warn("Cannot delete non-draft salon", salonId, existing.status);
       throw new ORPCError("BAD_REQUEST", {
         message: "Only draft salons can be deleted.",
       });
     }
 
     await this.repo.delete(ctx, existing);
+    ctx.logger.info("Salon deleted", salonId);
   }
 }

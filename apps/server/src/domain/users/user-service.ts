@@ -11,8 +11,10 @@ export class UserService {
     ctx: UserContext,
   ): Promise<{ userEntity: UserEntity | null; sessionEntity: UserContext["session"] | null }> {
     if (!ctx.currentUserId) {
+      ctx.logger.trace("No current user (unauthenticated)");
       return { userEntity: null, sessionEntity: null };
     }
+    ctx.logger.trace("Loading current user", ctx.currentUserId);
     const userEntity = await this.repo.findById(ctx, ctx.currentUserId);
     return { userEntity, sessionEntity: ctx.session ?? null };
   }

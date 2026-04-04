@@ -13,9 +13,6 @@ const config = defineConfig({
   define: {
     "process.env.NODE_ENV": JSON.stringify(sharedEnv.NODE_ENV),
   },
-  server: {
-    allowedHosts: [sharedEnv.CLIENT_URL],
-  },
   plugins: [
     devtools(),
     nitroV2Plugin({

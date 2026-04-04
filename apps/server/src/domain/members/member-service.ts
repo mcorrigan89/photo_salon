@@ -17,6 +17,7 @@ export class MemberService {
   ) {}
 
   async listMembers(ctx: UserContext, organizationId: string): Promise<MemberEntity[]> {
+    ctx.logger.trace("Listing members", organizationId);
     return this.repo.listByOrganization(ctx, organizationId);
   }
 
@@ -30,18 +31,20 @@ export class MemberService {
       organizationId: string;
     },
   ): Promise<MemberEntity> {
-    // Find or create the user
+    ctx.logger.info("Adding member", params.email, params.organizationId);
+
     let userEntity = await this.userRepo.findByEmail(ctx, params.email);
     if (!userEntity) {
+      ctx.logger.info("Creating new user for member", params.email);
       userEntity = await this.userRepo.save(
         ctx,
         UserEntity.create({ name: params.name, email: params.email }),
       );
     }
 
-    // Check not already a member
     const existing = await this.repo.findByUserAndOrg(ctx, userEntity.id, params.organizationId);
     if (existing) {
+      ctx.logger.warn("Member already exists", params.email, params.organizationId);
       throw new ORPCError("CONFLICT", {
         message: "This person is already a member of this club.",
       });
@@ -58,6 +61,7 @@ export class MemberService {
       }),
     );
 
+    ctx.logger.info("Member added", newMember.id, params.email);
     await this.sendWelcomeEmail(ctx, params.email);
 
     return newMember;
@@ -72,14 +76,18 @@ export class MemberService {
       role?: string;
     },
   ): Promise<MemberEntity> {
+    ctx.logger.info("Updating member", params.memberId);
+
     const existing = await this.repo.findById(ctx, params.memberId);
     if (!existing) {
+      ctx.logger.warn("Member not found for update", params.memberId);
       throw new ORPCError("NOT_FOUND", { message: "Member not found." });
     }
 
     if (params.name) {
       const userEntity = await this.userRepo.findById(ctx, existing.userId);
       if (userEntity) {
+        ctx.logger.info("Updating user name", existing.userId, params.name);
         await this.userRepo.save(ctx, userEntity.with({ name: params.name }));
       }
     }
@@ -88,11 +96,15 @@ export class MemberService {
   }
 
   async removeMember(ctx: UserContext, memberId: string): Promise<void> {
+    ctx.logger.info("Removing member", memberId);
+
     const existing = await this.repo.findById(ctx, memberId);
     if (!existing) {
+      ctx.logger.warn("Member not found for removal", memberId);
       throw new ORPCError("NOT_FOUND", { message: "Member not found." });
     }
     await this.repo.delete(ctx, existing);
+    ctx.logger.info("Member removed", memberId);
   }
 
   private async sendWelcomeEmail(ctx: UserContext, email: string): Promise<void> {
@@ -104,8 +116,8 @@ export class MemberService {
         textBody: `You've been added as a member. Visit ${loginUrl} to request your magic link and sign in.`,
         htmlBody: `<p>You've been added as a member. <a href="${loginUrl}">Click here</a> to request your magic link and sign in.</p>`,
       });
+      ctx.logger.info("Welcome email sent", email);
     } catch {
-      // Non-fatal — member can request their own magic link later
       ctx.logger.warn(`Failed to send welcome email to ${email}`);
     }
   }

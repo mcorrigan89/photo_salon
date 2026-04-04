@@ -22,6 +22,8 @@ export class OrganizationService {
       userId: string;
     },
   ): Promise<CreateOrgResult> {
+    _ctx.logger.info("Creating organization", params.name, params.slug, params.userId);
+
     const [org] = await this.db
       .insert(organization)
       .values({
@@ -40,6 +42,7 @@ export class OrganizationService {
       createdAt: new Date(),
     });
 
+    _ctx.logger.info("Organization created", org.id, org.slug);
     return { organizationId: org.id, slug: org.slug };
   }
 

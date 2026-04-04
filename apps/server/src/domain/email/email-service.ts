@@ -23,6 +23,7 @@ export class EmailService {
       return;
     }
 
+    ctx.logger.info("Sending email via Postmark", params.to, params.subject);
     await this.postmark.sendEmail({
       From: env.EMAIL_FROM,
       To: params.to,
@@ -30,5 +31,6 @@ export class EmailService {
       HtmlBody: params.htmlBody,
       TextBody: params.textBody,
     });
+    ctx.logger.info("Email sent", params.to);
   }
 }

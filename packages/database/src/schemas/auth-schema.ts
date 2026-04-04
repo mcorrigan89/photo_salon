@@ -117,6 +117,8 @@ export const member = pgTable(
     role: text("role").default("member").notNull(),
     // Club-assigned member number, unique per organization
     memberNumber: text("member_number"),
+    // Optional competition class (e.g. Novice, Class A). Null if org doesn't use classes.
+    competitionClassId: uuid("competition_class_id"),
     createdAt: timestamp("created_at").notNull(),
   },
   (table) => [
