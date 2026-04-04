@@ -17,11 +17,14 @@ export const memberDto = z.object({
 
 export type MemberDto = z.infer<typeof memberDto>;
 
-export const listMembersRoute = oc.output(z.array(memberDto));
+export const listMembersRoute = oc
+  .input(z.object({ organizationId: z.string() }))
+  .output(z.array(memberDto));
 
 export const addMemberRoute = oc
   .input(
     z.object({
+      organizationId: z.string(),
       name: z.string().min(1),
       email: z.string().email(),
       memberNumber: z.string().min(1).nullable(),

@@ -19,8 +19,8 @@ const currentUser = authenticatedRoute.currentUser.me.handler(async ({ context }
   return userController.currentUser(context, context.domain);
 });
 
-const listMembers = authorizedRoute.member.list.handler(async ({ context }) => {
-  return memberController.listMembers(context, context.domain);
+const listMembers = authorizedRoute.member.list.handler(async ({ input, context }) => {
+  return memberController.listMembers(context, context.domain, input);
 });
 
 const addMember = authorizedRoute.member.add.handler(async ({ input, context }) => {
@@ -35,8 +35,8 @@ const removeMember = authorizedRoute.member.remove.handler(async ({ input, conte
   return memberController.removeMember(context, context.domain, input.memberId);
 });
 
-const listTemplates = authorizedRoute.salonTemplate.list.handler(async ({ context }) => {
-  return salonTemplateController.listTemplates(context, context.domain);
+const listTemplates = authorizedRoute.salonTemplate.list.handler(async ({ input, context }) => {
+  return salonTemplateController.listTemplates(context, context.domain, input);
 });
 
 const getTemplate = authorizedRoute.salonTemplate.get.handler(async ({ input, context }) => {

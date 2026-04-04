@@ -1,4 +1,3 @@
-import { ORPCError } from "@orpc/server";
 import { type UserContext } from "@/lib/context.ts";
 import { type AppDomain } from "@/domain/domain.ts";
 import {
@@ -46,16 +45,13 @@ function toDto(entity: SalonTemplateEntity): SalonTemplateDto {
   };
 }
 
-function requireActiveOrg(ctx: UserContext): string {
-  const orgId = ctx.session?.activeOrganizationId;
-  if (!orgId) throw new ORPCError("FORBIDDEN", { message: "No active organization." });
-  return orgId;
-}
-
 export class SalonTemplateController {
-  async listTemplates(ctx: UserContext, domain: AppDomain): Promise<SalonTemplateDto[]> {
-    const orgId = requireActiveOrg(ctx);
-    const templates = await domain.salonTemplateService.listTemplates(ctx, orgId);
+  async listTemplates(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { organizationId: string },
+  ): Promise<SalonTemplateDto[]> {
+    const templates = await domain.salonTemplateService.listTemplates(ctx, input.organizationId);
     return templates.map(toDto);
   }
 
@@ -71,10 +67,9 @@ export class SalonTemplateController {
   async createTemplate(
     ctx: UserContext,
     domain: AppDomain,
-    input: { name: string; maxSubmissionsPerMember?: number; slideshowRevealMode?: "score_after" | "score_alongside" },
+    input: { organizationId: string; name: string; maxSubmissionsPerMember?: number; slideshowRevealMode?: "score_after" | "score_alongside" },
   ): Promise<SalonTemplateDto> {
-    const orgId = requireActiveOrg(ctx);
-    const template = await domain.salonTemplateService.createTemplate(ctx, { ...input, organizationId: orgId });
+    const template = await domain.salonTemplateService.createTemplate(ctx, input);
     return toDto(template);
   }
 

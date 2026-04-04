@@ -8,220 +8,221 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as LoginRouteImport } from "./routes/login";
-import { Route as DashboardRouteRouteImport } from "./routes/dashboard/route";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as DashboardIndexRouteImport } from "./routes/dashboard/index";
-import { Route as DashboardMembersRouteImport } from "./routes/dashboard/members";
-import { Route as DashboardTemplatesIndexRouteImport } from "./routes/dashboard/templates/index";
-import { Route as DashboardTemplatesTemplateIdRouteImport } from "./routes/dashboard/templates/$templateId";
-import { Route as AuthCallbackRouteImport } from "./routes/auth/callback";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardMembersRouteImport } from './routes/dashboard/members'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as DashboardTemplatesIndexRouteImport } from './routes/dashboard/templates/index'
+import { Route as DashboardTemplatesTemplateIdRouteImport } from './routes/dashboard/templates/$templateId'
 
 const LoginRoute = LoginRouteImport.update({
-  id: "/login",
-  path: "/login",
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
-  id: "/dashboard",
-  path: "/dashboard",
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const DashboardMembersRoute = DashboardMembersRouteImport.update({
-  id: "/members",
-  path: "/members",
+  id: '/members',
+  path: '/members',
   getParentRoute: () => DashboardRouteRoute,
-} as any);
-const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
-  id: "/templates/",
-  path: "/templates/",
-  getParentRoute: () => DashboardRouteRoute,
-} as any);
-const DashboardTemplatesTemplateIdRoute = DashboardTemplatesTemplateIdRouteImport.update({
-  id: "/templates/$templateId",
-  path: "/templates/$templateId",
-  getParentRoute: () => DashboardRouteRoute,
-} as any);
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: "/auth/callback",
-  path: "/auth/callback",
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
+const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
+  id: '/templates/',
+  path: '/templates/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardTemplatesTemplateIdRoute =
+  DashboardTemplatesTemplateIdRouteImport.update({
+    id: '/templates/$templateId',
+    path: '/templates/$templateId',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/dashboard": typeof DashboardRouteRouteWithChildren;
-  "/login": typeof LoginRoute;
-  "/auth/callback": typeof AuthCallbackRoute;
-  "/dashboard/": typeof DashboardIndexRoute;
-  "/dashboard/members": typeof DashboardMembersRoute;
-  "/dashboard/templates/": typeof DashboardTemplatesIndexRoute;
-  "/dashboard/templates/$templateId": typeof DashboardTemplatesTemplateIdRoute;
+  '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/members': typeof DashboardMembersRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
+  '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/login": typeof LoginRoute;
-  "/auth/callback": typeof AuthCallbackRoute;
-  "/dashboard": typeof DashboardIndexRoute;
-  "/dashboard/members": typeof DashboardMembersRoute;
-  "/dashboard/templates": typeof DashboardTemplatesIndexRoute;
-  "/dashboard/templates/$templateId": typeof DashboardTemplatesTemplateIdRoute;
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/members': typeof DashboardMembersRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
+  '/dashboard/templates': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/dashboard": typeof DashboardRouteRouteWithChildren;
-  "/login": typeof LoginRoute;
-  "/auth/callback": typeof AuthCallbackRoute;
-  "/dashboard/": typeof DashboardIndexRoute;
-  "/dashboard/members": typeof DashboardMembersRoute;
-  "/dashboard/templates/": typeof DashboardTemplatesIndexRoute;
-  "/dashboard/templates/$templateId": typeof DashboardTemplatesTemplateIdRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/members': typeof DashboardMembersRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/templates/$templateId': typeof DashboardTemplatesTemplateIdRoute
+  '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/dashboard"
-    | "/login"
-    | "/auth/callback"
-    | "/dashboard/"
-    | "/dashboard/members"
-    | "/dashboard/templates/"
-    | "/dashboard/templates/$templateId";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/auth/callback'
+    | '/dashboard/members'
+    | '/dashboard/'
+    | '/dashboard/templates/$templateId'
+    | '/dashboard/templates/'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/login"
-    | "/auth/callback"
-    | "/dashboard"
-    | "/dashboard/members"
-    | "/dashboard/templates"
-    | "/dashboard/templates/$templateId";
+    | '/'
+    | '/login'
+    | '/auth/callback'
+    | '/dashboard/members'
+    | '/dashboard'
+    | '/dashboard/templates/$templateId'
+    | '/dashboard/templates'
   id:
-    | "__root__"
-    | "/"
-    | "/dashboard"
-    | "/login"
-    | "/auth/callback"
-    | "/dashboard/"
-    | "/dashboard/members"
-    | "/dashboard/templates/"
-    | "/dashboard/templates/$templateId";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/auth/callback'
+    | '/dashboard/members'
+    | '/dashboard/'
+    | '/dashboard/templates/$templateId'
+    | '/dashboard/templates/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren;
-  LoginRoute: typeof LoginRoute;
-  AuthCallbackRoute: typeof AuthCallbackRoute;
+  IndexRoute: typeof IndexRoute
+  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/login": {
-      id: "/login";
-      path: "/login";
-      fullPath: "/login";
-      preLoaderRoute: typeof LoginRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/dashboard": {
-      id: "/dashboard";
-      path: "/dashboard";
-      fullPath: "/dashboard";
-      preLoaderRoute: typeof DashboardRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/dashboard/": {
-      id: "/dashboard/";
-      path: "/";
-      fullPath: "/dashboard/";
-      preLoaderRoute: typeof DashboardIndexRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/members": {
-      id: "/dashboard/members";
-      path: "/members";
-      fullPath: "/dashboard/members";
-      preLoaderRoute: typeof DashboardMembersRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/templates/": {
-      id: "/dashboard/templates/";
-      path: "/templates/";
-      fullPath: "/dashboard/templates/";
-      preLoaderRoute: typeof DashboardTemplatesIndexRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/dashboard/templates/$templateId": {
-      id: "/dashboard/templates/$templateId";
-      path: "/templates/$templateId";
-      fullPath: "/dashboard/templates/$templateId";
-      preLoaderRoute: typeof DashboardTemplatesTemplateIdRouteImport;
-      parentRoute: typeof DashboardRouteRoute;
-    };
-    "/auth/callback": {
-      id: "/auth/callback";
-      path: "/auth/callback";
-      fullPath: "/auth/callback";
-      preLoaderRoute: typeof AuthCallbackRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/members': {
+      id: '/dashboard/members'
+      path: '/members'
+      fullPath: '/dashboard/members'
+      preLoaderRoute: typeof DashboardMembersRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/templates/': {
+      id: '/dashboard/templates/'
+      path: '/templates'
+      fullPath: '/dashboard/templates/'
+      preLoaderRoute: typeof DashboardTemplatesIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/templates/$templateId': {
+      id: '/dashboard/templates/$templateId'
+      path: '/templates/$templateId'
+      fullPath: '/dashboard/templates/$templateId'
+      preLoaderRoute: typeof DashboardTemplatesTemplateIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
   }
 }
 
 interface DashboardRouteRouteChildren {
-  DashboardIndexRoute: typeof DashboardIndexRoute;
-  DashboardMembersRoute: typeof DashboardMembersRoute;
-  DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute;
-  DashboardTemplatesTemplateIdRoute: typeof DashboardTemplatesTemplateIdRoute;
+  DashboardMembersRoute: typeof DashboardMembersRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardTemplatesTemplateIdRoute: typeof DashboardTemplatesTemplateIdRoute
+  DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
-  DashboardIndexRoute: DashboardIndexRoute,
   DashboardMembersRoute: DashboardMembersRoute,
-  DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
   DashboardTemplatesTemplateIdRoute: DashboardTemplatesTemplateIdRoute,
-};
+  DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
+}
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
-);
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   AuthCallbackRoute: AuthCallbackRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-import type { createStart } from "@tanstack/react-start";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }

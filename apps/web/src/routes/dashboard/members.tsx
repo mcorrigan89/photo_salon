@@ -4,6 +4,7 @@ import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import { orpc } from "@/lib/api-client";
+import { useOrganizationId } from "@/lib/use-org";
 import type { MemberDto } from "@photo-salon/contract";
 
 export const Route = createFileRoute("/dashboard/members")({
@@ -20,13 +21,13 @@ const ROLE_LABELS: Record<string, string> = {
 
 // ── Add member modal ──────────────────────────────────────────────────────────
 
-function AddMemberModal({ onClose }: { onClose: () => void }) {
+function AddMemberModal({ organizationId, onClose }: { organizationId: string; onClose: () => void }) {
   const queryClient = useQueryClient();
 
   const add = useMutation({
     ...orpc.member.add.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries(orpc.member.list.queryOptions());
+      queryClient.invalidateQueries(orpc.member.list.queryOptions({ input: { organizationId } }));
       toast.success("Member added.");
       onClose();
     },
@@ -44,6 +45,7 @@ function AddMemberModal({ onClose }: { onClose: () => void }) {
     },
     onSubmit: async ({ value }) => {
       await add.mutateAsync({
+        organizationId,
         name: value.name,
         email: value.email,
         memberNumber: value.memberNumber || null,
@@ -150,13 +152,13 @@ function AddMemberModal({ onClose }: { onClose: () => void }) {
 
 // ── Edit member modal ─────────────────────────────────────────────────────────
 
-function EditMemberModal({ member, onClose }: { member: MemberDto; onClose: () => void }) {
+function EditMemberModal({ member, organizationId, onClose }: { member: MemberDto; organizationId: string; onClose: () => void }) {
   const queryClient = useQueryClient();
 
   const update = useMutation({
     ...orpc.member.update.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries(orpc.member.list.queryOptions());
+      queryClient.invalidateQueries(orpc.member.list.queryOptions({ input: { organizationId } }));
       toast.success("Member updated.");
       onClose();
     },
@@ -251,13 +253,13 @@ function EditMemberModal({ member, onClose }: { member: MemberDto; onClose: () =
 
 // ── Remove confirm modal ──────────────────────────────────────────────────────
 
-function RemoveMemberModal({ member, onClose }: { member: MemberDto; onClose: () => void }) {
+function RemoveMemberModal({ member, organizationId, onClose }: { member: MemberDto; organizationId: string; onClose: () => void }) {
   const queryClient = useQueryClient();
 
   const remove = useMutation({
     ...orpc.member.remove.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries(orpc.member.list.queryOptions());
+      queryClient.invalidateQueries(orpc.member.list.queryOptions({ input: { organizationId } }));
       toast.success("Member removed.");
       onClose();
     },
@@ -302,7 +304,8 @@ type Modal =
   | { type: "remove"; member: MemberDto };
 
 function MembersPage() {
-  const { data: members } = useSuspenseQuery(orpc.member.list.queryOptions());
+  const organizationId = useOrganizationId();
+  const { data: members } = useSuspenseQuery(orpc.member.list.queryOptions({ input: { organizationId } }));
   const [modal, setModal] = useState<Modal | null>(null);
 
   return (
@@ -363,12 +366,12 @@ function MembersPage() {
         </div>
       )}
 
-      {modal?.type === "add" && <AddMemberModal onClose={() => setModal(null)} />}
+      {modal?.type === "add" && <AddMemberModal organizationId={organizationId} onClose={() => setModal(null)} />}
       {modal?.type === "edit" && (
-        <EditMemberModal member={modal.member} onClose={() => setModal(null)} />
+        <EditMemberModal member={modal.member} organizationId={organizationId} onClose={() => setModal(null)} />
       )}
       {modal?.type === "remove" && (
-        <RemoveMemberModal member={modal.member} onClose={() => setModal(null)} />
+        <RemoveMemberModal member={modal.member} organizationId={organizationId} onClose={() => setModal(null)} />
       )}
     </div>
   );
