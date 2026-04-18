@@ -95,6 +95,16 @@ export const deleteSalonRoute = oc
   .input(z.object({ salonId: z.string() }))
   .output(z.object({ success: z.boolean() }));
 
+export const inviteExternalJudgeRoute = oc
+  .input(
+    z.object({
+      salonId: z.string(),
+      name: z.string().min(1),
+      email: z.string().email(),
+    }),
+  )
+  .output(salonDto);
+
 // ── Criterion routes ──────────────────────────────────────────────────────────
 
 export const addSalonCriterionRoute = oc

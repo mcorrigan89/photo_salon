@@ -57,6 +57,16 @@ export class JudgingController {
     return results;
   }
 
+  async myAssignments(ctx: UserContext, domain: AppDomain) {
+    if (!ctx.currentUserId) throw new ORPCError("FORBIDDEN");
+    const salons = await domain.scoringService.getMyJudgingAssignments(ctx, ctx.currentUserId);
+    return salons.map((s) => ({
+      salonId: s.id,
+      salonName: s.name,
+      status: s.status,
+    }));
+  }
+
   async saveScore(
     ctx: UserContext,
     domain: AppDomain,

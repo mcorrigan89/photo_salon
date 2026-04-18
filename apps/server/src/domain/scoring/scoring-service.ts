@@ -23,6 +23,11 @@ export class ScoringService {
     @inject(SubmissionRepository) private submissionRepo: SubmissionRepository,
   ) {}
 
+  async getMyJudgingAssignments(ctx: UserContext, judgeUserId: string) {
+    ctx.logger.trace("Getting judging assignments", judgeUserId);
+    return this.salonRepo.findByJudgeId(ctx, judgeUserId);
+  }
+
   async getScoresForSalon(ctx: UserContext, salonId: string) {
     ctx.logger.trace("Loading all scores for salon", salonId);
     const scores = await this.scoreRepo.listBySalonId(ctx, salonId);
