@@ -187,8 +187,10 @@ function SubmissionCard({ submission, onWithdraw, showScores }: { submission: Su
 
 function ActiveSalonSubmissions({ salon }: { salon: SalonDto }) {
   const queryClient = useQueryClient();
+  const { data: user } = useSuspenseQuery(orpc.currentUser.me.queryOptions());
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const activeCategoryId = selectedCategory || salon.categories[0]?.id || "";
+  const isJudge = user?.id === salon.judgeId;
 
   const { data: mySubmissions } = useSuspenseQuery(
     orpc.submission.listMine.queryOptions({
@@ -271,7 +273,7 @@ function ActiveSalonSubmissions({ salon }: { salon: SalonDto }) {
       {salon.status === "judging" && (
         <div className="mb-8 rounded-lg border border-border p-4">
           <p className="text-sm text-muted-foreground">Submissions are closed. Judging is underway.</p>
-          {salon.judgeId && (
+          {isJudge && (
             <Link
               to="/dashboard/judge/$salonId"
               params={{ salonId: salon.id }}

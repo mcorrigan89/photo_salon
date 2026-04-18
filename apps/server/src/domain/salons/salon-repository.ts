@@ -65,6 +65,30 @@ export class SalonRepository {
     );
   }
 
+  async findByJudgeId(_ctx: UserContext, judgeId: string): Promise<SalonEntity[]> {
+    const salons = await this.db
+      .select()
+      .from(salon)
+      .where(eq(salon.judgeId, judgeId))
+      .orderBy(asc(salon.year), asc(salon.month));
+
+    if (salons.length === 0) return [];
+
+    const ids = salons.map((s) => s.id);
+    const [allCriteria, allCategories] = await Promise.all([
+      this.db.select().from(salonScoringCriterion).where(inArray(salonScoringCriterion.salonId, ids)).orderBy(asc(salonScoringCriterion.displayOrder)),
+      this.db.select().from(salonCategory).where(inArray(salonCategory.salonId, ids)).orderBy(asc(salonCategory.displayOrder)),
+    ]);
+
+    return salons.map((s) =>
+      SalonEntity.fromModels(
+        s,
+        allCriteria.filter((c) => c.salonId === s.id),
+        allCategories.filter((cat) => cat.salonId === s.id),
+      ),
+    );
+  }
+
   async findByCategoryId(_ctx: UserContext, categoryId: string): Promise<SalonEntity | null> {
     const rows = await this.db
       .select({ salonId: salonCategory.salonId })

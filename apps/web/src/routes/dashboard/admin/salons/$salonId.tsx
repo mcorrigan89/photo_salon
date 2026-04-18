@@ -212,6 +212,8 @@ function SalonSettings({ salon }: { salon: SalonDto }) {
         )}
       </form.Field>
 
+      {!isComplete && <InviteExternalJudgeButton salon={salon} />}
+
       {!isComplete && (
         <button
           type="submit"
@@ -222,6 +224,98 @@ function SalonSettings({ salon }: { salon: SalonDto }) {
         </button>
       )}
     </form>
+  );
+}
+
+// ── Invite external judge ────────────────────────────────────────────────────
+
+function InviteExternalJudgeButton({ salon }: { salon: SalonDto }) {
+  const [open, setOpen] = useState(false);
+  const setSalon = useSetSalon(salon.id);
+
+  const invite = useMutation({
+    ...orpc.salon.inviteExternalJudge.mutationOptions(),
+    onSuccess: (data) => {
+      setSalon(data);
+      toast.success("Judge invited. They'll receive a magic link email.");
+      setOpen(false);
+    },
+    onError: (err: Error) => toast.error(err.message ?? "Failed to invite judge."),
+  });
+
+  const form = useForm({
+    defaultValues: { name: "", email: "" },
+    onSubmit: async ({ value }) => {
+      if (!value.name.trim() || !value.email.trim()) return;
+      await invite.mutateAsync({ salonId: salon.id, name: value.name.trim(), email: value.email.trim() });
+    },
+  });
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-xs text-zinc-500 hover:text-foreground underline"
+      >
+        Or invite an external judge
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-900">
+            <h2 className="mb-1 text-lg font-semibold">Invite External Judge</h2>
+            <p className="mb-4 text-sm text-muted-foreground">
+              A magic link will be emailed to them. They'll have access to judge this salon only — no full membership.
+            </p>
+            <form
+              onSubmit={(e) => { e.preventDefault(); form.handleSubmit(); }}
+              className="space-y-4"
+            >
+              <form.Field name="name">
+                {(field) => (
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">Name</label>
+                    <input
+                      className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+              </form.Field>
+              <form.Field name="email">
+                {(field) => (
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">Email</label>
+                    <input
+                      type="email"
+                      className="w-full rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+              </form.Field>
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" onClick={() => setOpen(false)} className="rounded px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={invite.isPending}
+                  className="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+                >
+                  {invite.isPending ? "Sending…" : "Send Invite"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

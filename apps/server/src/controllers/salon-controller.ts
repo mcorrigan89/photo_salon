@@ -149,6 +149,14 @@ export class SalonController {
     return toDto(await domain.salonService.removeCategory(ctx, categoryId));
   }
 
+  async inviteExternalJudge(
+    ctx: UserContext,
+    domain: AppDomain,
+    input: { salonId: string; name: string; email: string },
+  ): Promise<SalonDto> {
+    return toDto(await domain.salonService.inviteExternalJudge(ctx, input));
+  }
+
   async deleteSalon(
     ctx: UserContext,
     domain: AppDomain,

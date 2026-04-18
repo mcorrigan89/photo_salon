@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(head -50 /Users/michaelcorrigan/Code/acme/.github/workflows/*.yml)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm --filter @photo-salon/server compile)",
+      "Bash(pnpm --filter @photo-salon/web compile)",
+      "Bash(/Users/michaelcorrigan/Code/photo_salon/infra/prometheus.yml:*)",
+      "Bash(__NEW_LINE_47dc723c8831af80__ cat:*)",
+      "Bash(/Users/michaelcorrigan/Code/photo_salon/infra/tempo.yaml:*)",
+      "Bash(/Users/michaelcorrigan/Code/photo_salon/infra/otel-collector-config.yaml:*)",
+      "Bash(docker compose:*)",
+      "Bash(pnpm:*)",
+      "WebSearch",
+      "WebFetch(domain:oxc.rs)",
+      "Bash(find /Users/michaelcorrigan/Code/acme/apps -type f -name *.test.ts)",
+      "WebFetch(domain:polar.sh)",
+      "WebFetch(domain:docs.polar.sh)",
+      "Bash(ls /Users/michaelcorrigan/Code/photo_salon/node_modules/.pnpm/@polar-sh*/node_modules/@polar-sh/sdk/)",
+      "Bash(docker exec photo_salon-postgres-1:*)",
+      "Bash(node -e \"const { redirect } = require\\('@tanstack/react-router'\\); console.log\\(JSON.stringify\\(redirect\\({ to: '/test' }\\)\\)\\)\")",
+      "Bash(node -e \"import\\('@tanstack/react-router'\\).then\\(m => console.log\\(JSON.stringify\\(m.redirect\\({ to: '/test' }\\)\\)\\)\\)\")",
+      "Bash(mv members.tsx admin/members.tsx)",
+      "Bash(mv salons:*)",
+      "Bash(mv templates:*)",
+      "Bash(ls -d /Users/michaelcorrigan/Code/photo_salon/packages/*)",
+      "Bash(ls -d /Users/michaelcorrigan/Code/photo_salon/apps/*)",
+      "Bash(find:*)",
+      "Bash(git rm:*)"
+    ]
+  }
+}

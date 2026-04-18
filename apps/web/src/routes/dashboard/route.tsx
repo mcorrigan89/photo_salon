@@ -11,6 +11,12 @@ export const Route = createFileRoute("/dashboard")({
     }
     const config = await context.queryClient.fetchQuery(orpc.onboarding.config.queryOptions());
     if (!config.hasOrganization) {
+      // External judge? Route them to their judging assignment.
+      const assignments = await context.queryClient.fetchQuery(orpc.judging.myAssignments.queryOptions());
+      const activeAssignment = assignments.find((a) => a.status === "judging");
+      if (activeAssignment) {
+        throw redirect({ to: "/dashboard/judge/$salonId", params: { salonId: activeAssignment.salonId } });
+      }
       throw redirect({ to: "/onboarding" });
     }
   },
@@ -33,6 +39,13 @@ function NavLink({ to, exact = false, children }: { to: string; exact?: boolean;
 function DashboardLayout() {
   const { data: user } = useSuspenseQuery(orpc.currentUser.me.queryOptions());
   const isAdmin = user?.activeOrganization?.memberRole === "admin";
+  const orgId = user?.activeOrganization?.id;
+  const { data: salons } = useSuspenseQuery(
+    orpc.salon.list.queryOptions({ input: { organizationId: orgId ?? "" } }),
+  );
+  const activeJudgingSalon = salons.find(
+    (s) => s.status === "judging" && s.judgeId === user?.id,
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -43,6 +56,16 @@ function DashboardLayout() {
             <nav className="flex items-center gap-1">
               <NavLink to="/dashboard" exact>Home</NavLink>
               <NavLink to="/dashboard/history" exact>History</NavLink>
+              {activeJudgingSalon && (
+                <Link
+                  to="/dashboard/judge/$salonId"
+                  params={{ salonId: activeJudgingSalon.id }}
+                  activeProps={{ className: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-zinc-900" }}
+                  className="px-3 py-1.5 rounded-md text-sm transition-colors text-zinc-400 hover:text-foreground"
+                >
+                  Judge
+                </Link>
+              )}
               {isAdmin && <NavLink to="/dashboard/admin">Admin</NavLink>}
             </nav>
           </div>

@@ -32,6 +32,16 @@ export const getJudgingSubmissionsRoute = oc
   .input(z.object({ salonId: z.string() }))
   .output(z.array(judgingSubmissionDto));
 
+export const myJudgingAssignmentsRoute = oc.output(
+  z.array(
+    z.object({
+      salonId: z.string(),
+      salonName: z.string(),
+      status: z.enum(["draft", "open", "judging", "complete"]),
+    }),
+  ),
+);
+
 export const saveScoreRoute = oc
   .input(
     z.object({

@@ -120,6 +120,10 @@ const deleteSalon = authorizedRoute.salon.delete.handler(async ({ input, context
   return salonController.deleteSalon(context, context.domain, input.salonId);
 });
 
+const inviteExternalJudge = authorizedRoute.salon.inviteExternalJudge.handler(async ({ input, context }) => {
+  return salonController.inviteExternalJudge(context, context.domain, input);
+});
+
 const addSalonCriterion = authorizedRoute.salon.addCriterion.handler(async ({ input, context }) => {
   return salonController.addCriterion(context, context.domain, input);
 });
@@ -176,6 +180,10 @@ const saveScore = authorizedRoute.judging.saveScore.handler(async ({ input, cont
   return judgingController.saveScore(context, context.domain, input);
 });
 
+const myJudgingAssignments = authorizedRoute.judging.myAssignments.handler(async ({ context }) => {
+  return judgingController.myAssignments(context, context.domain);
+});
+
 export const routerImplementation = base.router({
   healthy,
   currentUser: {
@@ -193,6 +201,7 @@ export const routerImplementation = base.router({
     update: updateSalon,
     transition: transitionSalon,
     delete: deleteSalon,
+    inviteExternalJudge,
     addCriterion: addSalonCriterion,
     updateCriterion: updateSalonCriterion,
     removeCriterion: removeSalonCriterion,
@@ -206,6 +215,7 @@ export const routerImplementation = base.router({
   judging: {
     submissions: judgingSubmissions,
     saveScore,
+    myAssignments: myJudgingAssignments,
   },
   member: {
     list: listMembers,

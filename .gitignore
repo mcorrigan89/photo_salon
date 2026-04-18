@@ -3,6 +3,11 @@ dist
 build
 .output
 .cache
+.vinxi
+.nitro
+coverage
 *.local
+.env
 .env.local
+.env.production
 uploads/

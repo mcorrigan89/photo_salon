@@ -1,7 +1,11 @@
 import { inject, injectable } from "inversify";
 import { ORPCError } from "@orpc/server";
 import { type UserContext } from "@/lib/context.ts";
+import { getSharedEnv } from "@photo-salon/env/shared";
 import { SalonTemplateRepository } from "@/domain/salon-templates/salon-template-repository.ts";
+import { UserRepository } from "@/domain/users/user-repository.ts";
+import { UserEntity } from "@/domain/users/user-entity.ts";
+import { EmailService } from "@/domain/email/email-service.ts";
 import { SalonRepository } from "./salon-repository.ts";
 import { SubmissionRepository } from "@/domain/submissions/submission-repository.ts";
 import { SalonEntity, type SalonStatus } from "./salon-entity.ts";
@@ -14,6 +18,8 @@ export class SalonService {
     @inject(SalonRepository) private repo: SalonRepository,
     @inject(SalonTemplateRepository) private templateRepo: SalonTemplateRepository,
     @inject(SubmissionRepository) private submissionRepo: SubmissionRepository,
+    @inject(UserRepository) private userRepo: UserRepository,
+    @inject(EmailService) private email: EmailService,
   ) {}
 
   async listSalons(ctx: UserContext, organizationId: string): Promise<SalonEntity[]> {
@@ -85,6 +91,44 @@ export class SalonService {
     ctx.logger.info("Snapshotted categories", categories.length);
 
     return this.repo.findById(ctx, saved.id) as Promise<SalonEntity>;
+  }
+
+  async inviteExternalJudge(
+    ctx: UserContext,
+    params: { salonId: string; name: string; email: string },
+  ): Promise<SalonEntity> {
+    ctx.logger.info("Inviting external judge", params.salonId, params.email);
+
+    const salon = await this.repo.findById(ctx, params.salonId);
+    if (!salon) throw new ORPCError("NOT_FOUND", { message: "Salon not found." });
+
+    // Find or create user (external — no member record)
+    let userEntity = await this.userRepo.findByEmail(ctx, params.email);
+    if (!userEntity) {
+      ctx.logger.info("Creating external judge user", params.email);
+      userEntity = await this.userRepo.save(
+        ctx,
+        UserEntity.create({ name: params.name, email: params.email }),
+      );
+    }
+
+    // Assign as judge
+    const updated = await this.repo.save(ctx, salon.with({ judgeId: userEntity.id }));
+
+    // Send invite email
+    try {
+      const loginUrl = `${getSharedEnv().CLIENT_URL}/login`;
+      await this.email.send(ctx, {
+        to: params.email,
+        subject: `You've been invited to judge "${salon.name}"`,
+        textBody: `You've been invited to judge the photography salon "${salon.name}".\n\nVisit ${loginUrl} to request your magic link and sign in. Once signed in, you'll see the judging interface for this salon.`,
+        htmlBody: `<p>You've been invited to judge the photography salon "<strong>${salon.name}</strong>".</p><p><a href="${loginUrl}">Click here</a> to request your magic link and sign in. Once signed in, you'll see the judging interface for this salon.</p>`,
+      });
+    } catch {
+      ctx.logger.warn("Failed to send judge invite email", params.email);
+    }
+
+    return updated;
   }
 
   async updateSalon(

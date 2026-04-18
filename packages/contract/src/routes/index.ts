@@ -36,6 +36,7 @@ import {
   updateSalonRoute,
   transitionSalonRoute,
   deleteSalonRoute,
+  inviteExternalJudgeRoute,
   addSalonCriterionRoute,
   updateSalonCriterionRoute,
   removeSalonCriterionRoute,
@@ -53,6 +54,7 @@ import {
 import {
   getJudgingSubmissionsRoute,
   saveScoreRoute,
+  myJudgingAssignmentsRoute,
 } from "./judging-routes.ts";
 import { getSlideshowRoute } from "./slideshow-routes.ts";
 
@@ -81,6 +83,7 @@ export const contract = {
     update: updateSalonRoute,
     transition: transitionSalonRoute,
     delete: deleteSalonRoute,
+    inviteExternalJudge: inviteExternalJudgeRoute,
     addCriterion: addSalonCriterionRoute,
     updateCriterion: updateSalonCriterionRoute,
     removeCriterion: removeSalonCriterionRoute,
@@ -101,6 +104,7 @@ export const contract = {
   judging: {
     submissions: getJudgingSubmissionsRoute,
     saveScore: saveScoreRoute,
+    myAssignments: myJudgingAssignmentsRoute,
   },
   salonTemplate: {
     list: listTemplatesRoute,
